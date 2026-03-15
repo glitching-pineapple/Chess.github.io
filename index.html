@@ -84,20 +84,25 @@
     }
 
     .logo-mark {
-      width: 52px;
-      height: 52px;
-      flex: 0 0 52px;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.06);
-      background: transparent;
-    }
+  width: 56px;
+  height: 56px;
+  flex: 0 0 56px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-    .logo-mark img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+.logo-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scale(1.55);
+  transform-origin: center;
+}
 
     .logo-text {
       display: flex;
