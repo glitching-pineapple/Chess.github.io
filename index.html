@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="icon" type="image/png" href="logo.png" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OpenSquare</title>
@@ -189,12 +190,39 @@
       pointer-events: none;
     }
 
-    .hero-main {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 2rem;
-      align-items: start;
-    }
+.hero-main {
+  display: block;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hero p {
+  margin: 0 auto 1.5rem;
+  max-width: 72ch;
+  font-size: 1.08rem;
+  color: var(--muted);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin: 1.5rem 0 1.8rem;
+  justify-content: center;
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(220px, 1fr));
+  gap: 0.85rem;
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.stat {
+  text-align: center;
+}
 
     .eyebrow {
       display: inline-block;
@@ -426,19 +454,18 @@
       font-size: 0.95rem;
     }
 
-    .program-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 1rem;
-    }
+.program-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
 
-    .program {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.2rem;
-      box-shadow: var(--shadow);
-    }
+.program {
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
 
     .program-number {
       width: 38px;
@@ -732,20 +759,20 @@
 <body>
   <header class="site-header">
     <div class="container nav">
-      <a href="#" class="logo" aria-label="OpenSquare home">
-        <span class="logo-mark">
-          <img src="logo.png" alt="OpenSquare logo" />
-        </span>
-        <span class="logo-text">
-          <span class="logo-name">OpenSquare</span>
-          <span class="logo-tag">Chess Outreach Initiative</span>
-        </span>
-      </a>
+<a href="index.html" class="logo" aria-label="Open Square home">
+  <span class="logo-mark">
+    <img src="logo.png" alt="Open Square logo">
+  </span>
+  <span class="logo-text">
+    <span class="logo-name">Open Square</span>
+    <span class="logo-tag">Chess Outreach Initiative</span>
+  </span>
+</a>
 
       <ul>
         <li><a href="#mission">Mission</a></li>
         <li><a href="#programs">Programs</a></li>
-        <li><a href="#team">Team</a></li>
+        <li><a href="team.html">Team</a></li>
         <li><a href="#newsletter">Newsletter</a></li>
         <li><a href="#contact" class="nav-cta">Contact</a></li>
       </ul>
@@ -769,22 +796,23 @@
 
         <div class="hero-main">
           <div>
-            <div class="eyebrow">Student-led chess access and mentorship</div>
-
-            <h1>OpenSquare brings chess education to students who deserve more opportunities.</h1>
-
+            <h1>Supporting our community through chess</h1>
+          
             <p>
-              OpenSquare is a student-led organization focused on expanding access to
-              free chess tutoring, school clubs, and community programming. We use chess
-              to build confidence, strategic thinking, and long-term academic growth in
-              communities that are often overlooked by traditional enrichment programs.
+              Open Square is a community-centered initiative using chess as a tool for
+              learning, mentorship, confidence, and connection. Through free tutoring,
+              school partnerships, student leadership, and outreach programming, we aim
+              to create meaningful opportunities for young people to grow both on and off
+              the board. Our work is rooted in the belief that chess can strengthen
+              critical thinking, build resilience, and bring people together across
+              schools and neighborhoods.
             </p>
-
+          
             <div class="hero-actions">
-              <a href="#contact" class="btn btn-primary">Partner With Us</a>
+              <a href="#contact" class="btn btn-primary">Join Us</a>
               <a href="#programs" class="btn btn-secondary">View Programs</a>
             </div>
-
+          
             <div class="hero-stats">
               <div class="stat">
                 <strong>Free Access</strong>
@@ -801,26 +829,7 @@
             </div>
           </div>
 
-          <aside class="hero-side">
-            <h2 class="side-title">Why the identity works</h2>
 
-            <div class="quote-box">
-              <strong>Logo concept</strong>
-              <p>
-                The outer square represents structure and access. The inner square
-                suggests an open board space, a move, or a door opening to opportunity.
-              </p>
-            </div>
-
-            <div class="side-box">
-              <strong>Color palette</strong>
-              <p>
-                Deep navy creates credibility, amber adds warmth and visibility, and blue
-                acts as a clean modern accent. This gives the site stronger contrast than
-                the earlier white-and-teal version.
-              </p>
-            </div>
-          </aside>
         </div>
       </div>
     </section>
@@ -829,143 +838,123 @@
       <div class="container">
         <div class="section-head">
           <div class="section-kicker">Mission</div>
-          <h2>Using chess as a tool for learning, confidence, and belonging.</h2>
+          <h2>Using chess to build confidence, discipline, and opportunity.</h2>
           <p>
-            Chess can be far more than a game. It teaches discipline, patience,
-            decision-making, and long-term thinking. OpenSquare partners with schools
-            and community organizations to make those benefits available to more students.
+            Open Square believes chess can open doors for students by developing
+            focus, patience, problem-solving, and self-confidence. We work to make
+            those benefits more accessible through free programming, strong
+            mentorship, and partnerships with schools and community spaces.
           </p>
         </div>
-
+    
         <div class="mission-grid">
           <div class="card">
             <h3>What we believe</h3>
             <p>
-              Every student deserves access to meaningful enrichment. We focus on
-              communities where high-quality extracurricular opportunities are limited,
-              especially across Oakland and the East Bay.
+              Every student deserves access to meaningful enrichment and supportive
+              learning environments. We focus on making chess more available in
+              communities where extracurricular opportunities may be limited, while
+              keeping our approach welcoming, inclusive, and community-centered.
             </p>
-
+    
             <div class="pillars">
               <div class="pillar">
                 <div class="pillar-icon">01</div>
                 <div>
                   <h4>Access</h4>
-                  <p>Bring strong chess instruction to students at no cost.</p>
+                  <p>Provide free and approachable chess education for students and schools.</p>
                 </div>
               </div>
-
+    
               <div class="pillar">
                 <div class="pillar-icon">02</div>
                 <div>
                   <h4>Mentorship</h4>
-                  <p>Pair skill-building with guidance, encouragement, and leadership.</p>
+                  <p>Use chess instruction as a way to encourage leadership, growth, and confidence.</p>
                 </div>
               </div>
-
+    
               <div class="pillar">
                 <div class="pillar-icon">03</div>
                 <div>
                   <h4>Community</h4>
-                  <p>Create welcoming learning spaces where students can grow together.</p>
+                  <p>Create spaces where students, families, and educators can connect through learning.</p>
                 </div>
               </div>
             </div>
           </div>
-
+    
           <div class="card">
-            <h3>Our approach</h3>
+            <h3>How we work</h3>
             <p>
-              We build flexible programming for real community needs, whether a school
-              wants a beginner workshop, recurring club support, or tournament preparation
-              for students who are ready to compete.
+              Our programs are designed to be flexible and responsive to community
+              needs. Whether a school wants help launching a chess club, a youth
+              program needs volunteers, or students are looking for free tutoring,
+              Open Square aims to provide thoughtful support that is practical,
+              sustainable, and locally grounded.
+            </p>
+            <p style="margin-top: 1rem;">
+              We see chess not only as a game, but as a platform for academic
+              growth, mentorship, and stronger community ties.
             </p>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="programs">
-      <div class="container">
-        <div class="section-head">
-          <div class="section-kicker">Programs</div>
-          <h2>Practical ways to bring chess education to students.</h2>
-          <p>
-            Our programs are designed to meet students at every level, from first moves
-            to deeper competition and strategy.
-          </p>
-        </div>
+<section id="programs">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-kicker">Programs</div>
+      <h2>Programs designed to grow skills, leadership, and community.</h2>
+      <p>
+        Open Square offers accessible chess programming for students at
+        different stages of learning, from first-time players to those seeking
+        deeper strategy and tournament preparation.
+      </p>
+    </div>
 
-        <div class="program-grid">
-          <article class="program">
-            <div class="program-number">01</div>
-            <h3>Free Chess Tutoring</h3>
-            <p>One-on-one and small-group tutoring for elementary and middle school students.</p>
-          </article>
+    <div class="program-grid">
+      <article class="program">
+        <div class="program-number">01</div>
+        <h3>Free Chess Tutoring</h3>
+        <p>
+          One-on-one and small-group instruction that helps students build
+          confidence, understand core strategy, and improve through consistent support.
+        </p>
+      </article>
 
-          <article class="program">
-            <div class="program-number">02</div>
-            <h3>School Chess Clubs</h3>
-            <p>Volunteer-supported school clubs that help programs launch and stay active.</p>
-          </article>
+      <article class="program">
+        <div class="program-number">02</div>
+        <h3>School Chess Clubs</h3>
+        <p>
+          Support for starting and sustaining school-based chess communities
+          where students can learn, practice, and grow together.
+        </p>
+      </article>
 
-          <article class="program">
-            <div class="program-number">03</div>
-            <h3>Community Workshops</h3>
-            <p>Interactive outreach events that introduce chess in accessible community spaces.</p>
-          </article>
+      <article class="program">
+        <div class="program-number">03</div>
+        <h3>Community Workshops</h3>
+        <p>
+          Introductory and themed workshops for schools, libraries, and youth
+          spaces that make chess welcoming and accessible.
+        </p>
+      </article>
 
-          <article class="program">
-            <div class="program-number">04</div>
-            <h3>Tournament Mentorship</h3>
-            <p>Preparation, coaching, and support for students ready to compete more seriously.</p>
-          </article>
-        </div>
-      </div>
-    </section>
+      <article class="program">
+        <div class="program-number">04</div>
+        <h3>Tournament Mentorship</h3>
+        <p>
+          Guidance for students interested in competitive play, including
+          preparation, strategy development, and structured encouragement.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
 
-    <section id="team">
-      <div class="container">
-        <div class="section-head">
-          <div class="section-kicker">Team</div>
-          <h2>Student leaders building a stronger chess community.</h2>
-          <p>
-            Replace these placeholders with your actual portraits, names, and bios when
-            you are ready to publish the site.
-          </p>
-        </div>
 
-        <div class="team-grid">
-          <article class="member">
-            <div class="member-photo">
-              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80" alt="Founder portrait placeholder" />
-            </div>
-            <div class="member-body">
-              <h3>Your Name</h3>
-              <span class="member-role">Founder</span>
-              <p>
-                Competitive chess player and volunteer educator with experience teaching
-                through camps, tutoring programs, and student outreach.
-              </p>
-            </div>
-          </article>
-
-          <article class="member">
-            <div class="member-photo">
-              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80" alt="Co-organizer portrait placeholder" />
-            </div>
-            <div class="member-body">
-              <h3>Partner Name</h3>
-              <span class="member-role">Co-Organizer</span>
-              <p>
-                Supports program development, community outreach, and school partnerships
-                while helping coordinate tutoring sessions and volunteers.
-              </p>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
 
     <section id="newsletter">
       <div class="container">
@@ -1018,61 +1007,27 @@
       </div>
     </section>
 
-    <section id="contact">
-      <div class="container contact-wrap">
-        <div class="contact-card">
-          <h2>Bring chess to your school or community space.</h2>
-          <p>
-            OpenSquare would love to partner with schools, nonprofits, libraries, and
-            youth programs looking to offer free chess tutoring or start a chess club.
-          </p>
+<section id="contact">
+  <div class="container" style="max-width: 820px;">
+    <div class="contact-card">
+      <h2>Help us grow community through chess.</h2>
+      <p>
+        We welcome students, volunteers, schools, and community partners who
+        want to support accessible chess education and outreach.
+      </p>
 
-          <div class="contact-list">
-            <div class="contact-item">
-              <div>📧</div>
-              <div>
-                <strong>Email</strong>
-                <a href="mailto:your-email@example.com">your-email@example.com</a>
-              </div>
-            </div>
-
-            <div class="contact-item">
-              <div>📞</div>
-              <div>
-                <strong>Phone</strong>
-                <a href="tel:+11234567890">(123) 456-7890</a>
-              </div>
-            </div>
-
-            <div class="contact-item">
-              <div>📍</div>
-              <div>
-                <strong>Region</strong>
-                <span>East Bay, including Oakland</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="contact-side">
-          <div class="mini-card">
-            <h3>Direct contact information</h3>
-            <p><strong>Email:</strong> your-email@example.com</p>
-            <p><strong>Phone:</strong> (123) 456-7890</p>
-          </div>
-
-          <div class="mini-card">
-            <h3>Partnership opportunities</h3>
-            <ul>
-              <li>Introductory chess workshops</li>
-              <li>Recurring student tutoring sessions</li>
-              <li>Volunteer support for school chess clubs</li>
-              <li>Tournament prep and enrichment planning</li>
-            </ul>
+      <div class="contact-list">
+        <div class="contact-item">
+          <div>📧</div>
+          <div>
+            <strong>Email</strong>
+            <a href="mailto:TheOpenSquareInitiative@gmail.com">TheOpenSquareInitiative@gmail.com</a>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
   </main>
 
   <footer>
