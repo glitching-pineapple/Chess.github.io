@@ -1,79 +1,171 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Open Square — Chess Outreach Initiative</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    /* ─── LIGHT TOKENS ───────────────────────────── */
+    /* ═══════════════════════════════════════════════
+       LOADER
+    ═══════════════════════════════════════════════ */
+    #loader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #1B2D5B;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    #loader.done {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader-stage {
+      position: relative;
+      width: 120px;
+      height: 120px;
+    }
+
+    /* Each tile is one cell of the 4×4 chess grid */
+    .tile {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      opacity: 0;
+      transform: scale(0.4) rotate(20deg);
+    }
+
+    /* Wordmark under the grid */
+    .loader-name {
+      position: absolute;
+      bottom: -48px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: 22px;
+      letter-spacing: -0.3px;
+      color: #F5F0E8;
+      opacity: 0;
+      transform: translateX(-50%) translateY(6px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .loader-name.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Tile fly-in animation */
+    @keyframes tileIn {
+      0%   { opacity: 0; transform: scale(0.3) rotate(25deg) translate(var(--tx), var(--ty)); }
+      60%  { transform: scale(1.08) rotate(-3deg) translate(0,0); opacity: 1; }
+      80%  { transform: scale(0.96) rotate(1deg); }
+      100% { opacity: 1; transform: scale(1) rotate(0deg) translate(0,0); }
+    }
+
+    /* Loader ring — a subtle ambient pulse */
+    .loader-ring {
+      position: absolute;
+      inset: -24px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(235,185,80,0.18);
+      animation: ringPulse 1.8s ease-in-out infinite;
+    }
+    .loader-ring:nth-child(2) {
+      inset: -38px;
+      border-color: rgba(235,185,80,0.09);
+      animation-delay: 0.3s;
+    }
+    @keyframes ringPulse {
+      0%,100% { transform: scale(1);   opacity: 0.5; }
+      50%      { transform: scale(1.06); opacity: 1;   }
+    }
+
+    /* ═══════════════════════════════════════════════
+       DESIGN TOKENS
+    ═══════════════════════════════════════════════ */
     :root {
-      --bg:            #F9F6EF;
-      --bg-soft:       #EDE8DC;
-      --surface:       #D6CEBC;
-      --ink:           #1A1812;
-      --ink-mid:       #4A4538;
-      --ink-soft:      #8A8070;
-      --border:        rgba(26,24,18,0.10);
-      --border-strong: rgba(26,24,18,0.18);
-      --amber:         #C8852A;
-      --amber-lt:      #F2C46A;
-      --amber-bg:      #FDF4E3;
-      --amber-border:  rgba(200,133,42,0.25);
-      --header-bg:     rgba(249,246,239,0.92);
-      --strip-bg:      #EDE8DC;
-      --stats-bg:      #1A1812;
-      --stats-muted:   rgba(249,246,239,0.55);
-      --footer-bg:     #1A1812;
-      --footer-text:   rgba(249,246,239,0.7);
-      --footer-muted:  rgba(249,246,239,0.4);
-      --mission-card:  #EDE8DC;
-      --mission-quote: #F9F6EF;
-      --program-bg:    #EDE8DC;
-      --program-hover: #F9F6EF;
-      --contact-bg:    #EDE8DC;
-      --contact-card:  #F9F6EF;
-      --input-bg:      #F9F6EF;
-      --nl-panel:      #EDE8DC;
-      --shadow-amber:  rgba(200,133,42,0.12);
+      /* Cobalt & Cream — light */
+      --bg:            #F5F0E8;
+      --bg-soft:       #EBE4D5;
+      --surface:       #D8CEBB;
+      --ink:           #0F1F45;
+      --ink-mid:       #3A4E7A;
+      --ink-soft:      #7A8BAD;
+      --border:        rgba(15,31,69,0.10);
+      --border-strong: rgba(15,31,69,0.18);
+      --gold:          #C8922A;
+      --gold-lt:       #F0C060;
+      --gold-bg:       #FDF3DC;
+      --gold-border:   rgba(200,146,42,0.28);
+      --cobalt:        #1B2D5B;
+      --cobalt-mid:    #243870;
+      --cobalt-soft:   #3050A0;
+      --header-bg:     rgba(245,240,232,0.93);
+      --strip-bg:      #EBE4D5;
+      --stats-bg:      #0F1F45;
+      --stats-text:    #F5F0E8;
+      --stats-muted:   rgba(245,240,232,0.50);
+      --footer-bg:     #0A1530;
+      --footer-text:   rgba(245,240,232,0.72);
+      --footer-muted:  rgba(245,240,232,0.38);
+      --mission-card:  #EBE4D5;
+      --mission-quote: #F5F0E8;
+      --prog-bg:       #EBE4D5;
+      --prog-hover:    #F5F0E8;
+      --contact-bg:    #EBE4D5;
+      --contact-card:  #F5F0E8;
+      --input-bg:      #F5F0E8;
+      --nl-panel:      #EBE4D5;
+      --shadow-gold:   rgba(200,146,42,0.14);
+      --shadow-cobalt: rgba(15,31,69,0.10);
+      --accent:        var(--gold);
       --radius: 10px;
       --max:    1120px;
       --serif: 'DM Serif Display', Georgia, serif;
       --sans:  'DM Sans', system-ui, sans-serif;
     }
 
-    /* ─── DARK TOKENS ────────────────────────────── */
     [data-theme="dark"] {
-      --bg:            #13110D;
-      --bg-soft:       #1C1914;
-      --surface:       #2A251D;
-      --ink:           #F0EBE0;
-      --ink-mid:       #B8AD9E;
-      --ink-soft:      #7A7065;
-      --border:        rgba(240,235,224,0.08);
-      --border-strong: rgba(240,235,224,0.14);
-      --amber:         #D4921E;
-      --amber-lt:      #F2C46A;
-      --amber-bg:      rgba(212,146,30,0.12);
-      --amber-border:  rgba(212,146,30,0.28);
-      --header-bg:     rgba(19,17,13,0.93);
-      --strip-bg:      #1C1914;
-      --stats-bg:      #0E0C09;
-      --stats-muted:   rgba(240,235,224,0.45);
-      --footer-bg:     #0E0C09;
-      --footer-text:   rgba(240,235,224,0.65);
-      --footer-muted:  rgba(240,235,224,0.35);
-      --mission-card:  #1C1914;
-      --mission-quote: #13110D;
-      --program-bg:    #1C1914;
-      --program-hover: #232018;
-      --contact-bg:    #1C1914;
-      --contact-card:  #13110D;
-      --input-bg:      #13110D;
-      --nl-panel:      #1C1914;
-      --shadow-amber:  rgba(212,146,30,0.18);
+      --bg:            #0C1628;
+      --bg-soft:       #121F38;
+      --surface:       #1E2F50;
+      --ink:           #EEE8D8;
+      --ink-mid:       #A8B6D4;
+      --ink-soft:      #607090;
+      --border:        rgba(238,232,216,0.08);
+      --border-strong: rgba(238,232,216,0.15);
+      --gold:          #D4981E;
+      --gold-lt:       #F0C060;
+      --gold-bg:       rgba(212,152,30,0.13);
+      --gold-border:   rgba(212,152,30,0.28);
+      --cobalt:        #3866C8;
+      --cobalt-mid:    #2D54A8;
+      --cobalt-soft:   #4878D8;
+      --header-bg:     rgba(12,22,40,0.94);
+      --strip-bg:      #121F38;
+      --stats-bg:      #080F1E;
+      --stats-muted:   rgba(238,232,216,0.42);
+      --footer-bg:     #060C18;
+      --footer-text:   rgba(238,232,216,0.65);
+      --footer-muted:  rgba(238,232,216,0.35);
+      --mission-card:  #121F38;
+      --mission-quote: #0C1628;
+      --prog-bg:       #121F38;
+      --prog-hover:    #162238;
+      --contact-bg:    #121F38;
+      --contact-card:  #0C1628;
+      --input-bg:      #0C1628;
+      --nl-panel:      #121F38;
+      --shadow-gold:   rgba(212,152,30,0.20);
+      --shadow-cobalt: rgba(56,102,200,0.18);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -85,85 +177,59 @@
       color: var(--ink);
       line-height: 1.65;
       overflow-x: hidden;
-      transition: background 0.3s, color 0.3s;
+      transition: background 0.35s, color 0.35s;
     }
     img { display: block; max-width: 100%; }
     a   { color: inherit; text-decoration: none; }
+    .container { width: min(var(--max), calc(100% - 2.5rem)); margin: 0 auto; }
 
-    .container {
-      width: min(var(--max), calc(100% - 2.5rem));
-      margin: 0 auto;
-    }
-
-    /* ─── HEADER ─────────────────────────────────── */
+    /* ═══════════════════════════════════════════════
+       HEADER / NAV
+    ═══════════════════════════════════════════════ */
     .site-header {
       position: sticky; top: 0; z-index: 100;
       background: var(--header-bg);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(18px);
       border-bottom: 1px solid var(--border);
-      transition: background 0.3s, border-color 0.3s;
+      transition: background 0.35s, border-color 0.35s;
     }
     .nav {
-      display: flex;
-      align-items: center;
+      display: flex; align-items: center;
       justify-content: space-between;
-      gap: 1rem;
-      min-height: 70px;
+      gap: 1rem; min-height: 70px;
     }
 
-    /* ─── INLINE SVG LOGO ────────────────────────── */
-    .logo-link {
-      display: flex;
-      align-items: center;
-      flex-shrink: 0;
-      text-decoration: none;
-    }
-    .logo-svg { display: block; }
+    /* Logo */
+    .logo-link { display: flex; align-items: center; flex-shrink: 0; }
+    .logo-svg  { display: block; }
     .logo-light { display: block; }
     .logo-dark  { display: none;  }
     [data-theme="dark"] .logo-light { display: none;  }
     [data-theme="dark"] .logo-dark  { display: block; }
 
-    /* ─── NAV ────────────────────────────────────── */
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-    }
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-      list-style: none;
-    }
+    .nav-right { display: flex; align-items: center; gap: 1.5rem; }
+    .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
     .nav-links a {
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: var(--ink-mid);
-      transition: color 0.2s;
+      font-size: 0.9rem; font-weight: 500;
+      color: var(--ink-mid); transition: color 0.2s;
     }
     .nav-links a:hover { color: var(--ink); }
     .nav-cta {
       padding: 0.55rem 1.1rem !important;
-      background: var(--ink) !important;
-      color: var(--bg) !important;
+      background: var(--cobalt) !important;
+      color: #F5F0E8 !important;
       border-radius: 6px;
-      font-size: 0.88rem !important;
-      font-weight: 600 !important;
+      font-weight: 600 !important; font-size: 0.88rem !important;
       transition: background 0.2s, transform 0.15s !important;
     }
-    .nav-cta:hover { background: var(--amber) !important; transform: translateY(-1px); }
+    .nav-cta:hover { background: var(--gold) !important; transform: translateY(-1px); }
 
-    /* ─── THEME TOGGLE ───────────────────────────── */
+    /* Toggle */
     .theme-btn {
-      width: 36px; height: 36px;
-      border-radius: 8px;
+      width: 36px; height: 36px; border-radius: 8px;
       border: 1px solid var(--border-strong);
-      background: transparent;
-      cursor: pointer;
-      display: grid;
-      place-items: center;
-      flex-shrink: 0;
+      background: transparent; cursor: pointer;
+      display: grid; place-items: center; flex-shrink: 0;
       transition: background 0.2s;
     }
     .theme-btn:hover { background: var(--bg-soft); }
@@ -173,10 +239,11 @@
     [data-theme="dark"] .i-sun  { display: block; }
     [data-theme="dark"] .i-moon { display: none;  }
 
-    /* ─── REVEAL ─────────────────────────────────── */
+    /* ═══════════════════════════════════════════════
+       REVEAL
+    ═══════════════════════════════════════════════ */
     .reveal {
-      opacity: 0;
-      transform: translateY(26px);
+      opacity: 0; transform: translateY(26px);
       transition: opacity 0.7s ease, transform 0.7s ease;
     }
     .reveal.visible { opacity: 1; transform: none; }
@@ -184,69 +251,54 @@
     .d2 { transition-delay: 0.2s; }
     .d3 { transition-delay: 0.3s; }
 
-    /* ─── HERO ───────────────────────────────────── */
+    /* ═══════════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════════ */
     .hero { padding: 5rem 0 4rem; overflow: hidden; }
     .hero-inner {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
-      align-items: center;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 3rem; align-items: center;
     }
     .hero-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.35rem 0.8rem;
-      background: var(--amber-bg);
-      border: 1px solid var(--amber-border);
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.35rem 0.85rem;
+      background: var(--gold-bg); border: 1px solid var(--gold-border);
       border-radius: 100px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--amber);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      font-size: 0.78rem; font-weight: 600; color: var(--gold);
+      letter-spacing: 0.07em; text-transform: uppercase;
       margin-bottom: 1.5rem;
     }
     .hero-tag::before {
       content: ''; width: 6px; height: 6px;
-      background: var(--amber); border-radius: 50%;
+      background: var(--gold); border-radius: 50%;
     }
     .hero h1 {
       font-family: var(--serif);
       font-size: clamp(2.8rem, 5vw, 4.2rem);
-      line-height: 1.05;
-      letter-spacing: -0.02em;
-      color: var(--ink);
-      margin-bottom: 1.4rem;
+      line-height: 1.05; letter-spacing: -0.02em;
+      color: var(--ink); margin-bottom: 1.4rem;
     }
-    .hero h1 em { font-style: italic; color: var(--amber); }
+    .hero h1 em { font-style: italic; color: var(--cobalt); }
+    [data-theme="dark"] .hero h1 em { color: var(--cobalt-soft); }
+
     .hero-desc { font-size: 1.05rem; color: var(--ink-mid); max-width: 46ch; margin-bottom: 2rem; }
     .hero-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
 
     .btn {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.75rem 1.4rem;
-      border-radius: 7px;
-      font-family: var(--sans);
-      font-size: 0.93rem;
-      font-weight: 600;
-      border: 1.5px solid transparent;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-decoration: none;
+      display: inline-flex; align-items: center;
+      padding: 0.75rem 1.4rem; border-radius: 7px;
+      font-family: var(--sans); font-size: 0.93rem; font-weight: 600;
+      border: 1.5px solid transparent; cursor: pointer;
+      transition: all 0.2s; text-decoration: none;
     }
-    .btn-dark { background: var(--ink); color: var(--bg); }
-    .btn-dark:hover { background: var(--amber); transform: translateY(-2px); box-shadow: 0 6px 20px var(--shadow-amber); }
+    .btn-cobalt { background: var(--cobalt); color: #F5F0E8; }
+    .btn-cobalt:hover { background: var(--gold); transform: translateY(-2px); box-shadow: 0 6px 22px var(--shadow-gold); }
     .btn-outline { background: transparent; color: var(--ink); border-color: var(--surface); }
-    .btn-outline:hover { border-color: var(--ink); transform: translateY(-2px); }
+    .btn-outline:hover { border-color: var(--cobalt); color: var(--cobalt); transform: translateY(-2px); }
 
     .hero-photos {
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      grid-template-rows: 1fr 1fr;
-      gap: 0.7rem;
-      height: 420px;
+      display: grid; grid-template-columns: 1.2fr 1fr;
+      grid-template-rows: 1fr 1fr; gap: 0.7rem; height: 420px;
     }
     .hero-photo { border-radius: 10px; overflow: hidden; position: relative; }
     .hero-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
@@ -254,49 +306,52 @@
     .hero-photo.tall { grid-row: span 2; }
     .hero-photo::after {
       content: ''; position: absolute; inset: 0;
-      background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.15));
+      background: linear-gradient(180deg, transparent 50%, rgba(10,20,50,0.18));
       pointer-events: none;
     }
 
-    /* ─── MARQUEE ────────────────────────────────── */
+    /* ═══════════════════════════════════════════════
+       MARQUEE
+    ═══════════════════════════════════════════════ */
     .strip {
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 0.9rem 0;
-      background: var(--strip-bg);
-      overflow: hidden;
-      transition: background 0.3s;
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      padding: 0.9rem 0; background: var(--strip-bg); overflow: hidden;
+      transition: background 0.35s;
     }
     .marquee-track {
-      display: flex; gap: 3rem;
-      white-space: nowrap;
+      display: flex; gap: 3rem; white-space: nowrap;
       animation: marquee 22s linear infinite;
     }
     .marquee-track span {
-      font-size: 0.82rem; font-weight: 600;
-      letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--ink-mid); flex-shrink: 0;
+      font-size: 0.82rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--ink-mid); flex-shrink: 0;
     }
-    .marquee-track .dot { color: var(--amber); }
+    .marquee-track .dot { color: var(--gold); }
     @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-    /* ─── COMMON SECTION ─────────────────────────── */
+    /* ═══════════════════════════════════════════════
+       SECTION SHARED
+    ═══════════════════════════════════════════════ */
     section { padding: 5.5rem 0; }
     .section-label {
       font-size: 0.75rem; font-weight: 700;
       letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--amber); margin-bottom: 0.75rem;
+      color: var(--cobalt); margin-bottom: 0.75rem;
     }
+    [data-theme="dark"] .section-label { color: var(--cobalt-soft); }
     .section-title {
       font-family: var(--serif);
       font-size: clamp(2rem, 4vw, 2.8rem);
       line-height: 1.08; letter-spacing: -0.02em;
       color: var(--ink); margin-bottom: 1rem;
     }
-    .section-title em { font-style: italic; }
+    .section-title em { font-style: italic; color: var(--cobalt); }
+    [data-theme="dark"] .section-title em { color: var(--cobalt-soft); }
     .section-body { font-size: 1rem; color: var(--ink-mid); max-width: 52ch; }
 
-    /* ─── MISSION ────────────────────────────────── */
+    /* ═══════════════════════════════════════════════
+       MISSION
+    ═══════════════════════════════════════════════ */
     #mission { background: var(--bg); }
     .mission-layout {
       display: grid; grid-template-columns: 1fr 1fr;
@@ -306,82 +361,87 @@
     .pillars { display: grid; gap: 1.1rem; }
     .pillar {
       display: flex; gap: 1rem; align-items: flex-start;
-      padding: 1.1rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--bg);
-      transition: border-color 0.2s, transform 0.2s, background 0.3s;
+      padding: 1.1rem; border: 1px solid var(--border);
+      border-radius: var(--radius); background: var(--bg);
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s, background 0.35s;
     }
-    .pillar:hover { border-color: var(--amber); box-shadow: 0 4px 20px var(--shadow-amber); transform: translateX(4px); }
+    .pillar:hover { border-color: var(--cobalt); box-shadow: 0 4px 20px var(--shadow-cobalt); transform: translateX(4px); }
     .pillar-num {
       width: 32px; height: 32px; border-radius: 6px;
-      background: var(--amber-bg); border: 1px solid var(--amber-border);
+      background: rgba(27,45,91,0.08); border: 1px solid rgba(27,45,91,0.14);
       display: grid; place-items: center;
-      font-size: 0.75rem; font-weight: 700; color: var(--amber); flex-shrink: 0;
+      font-size: 0.75rem; font-weight: 700; color: var(--cobalt); flex-shrink: 0;
+    }
+    [data-theme="dark"] .pillar-num {
+      background: rgba(56,102,200,0.14); border-color: rgba(56,102,200,0.22);
+      color: var(--cobalt-soft);
     }
     .pillar h4 { font-size: 0.95rem; font-weight: 600; color: var(--ink); margin-bottom: 0.2rem; }
     .pillar p  { font-size: 0.9rem; color: var(--ink-soft); }
     .mission-right {
-      background: var(--mission-card);
-      border-radius: 14px; padding: 2rem;
-      border: 1px solid var(--border);
-      transition: background 0.3s;
+      background: var(--mission-card); border-radius: 14px;
+      padding: 2rem; border: 1px solid var(--border); transition: background 0.35s;
     }
     .mission-right h3 { font-family: var(--serif); font-size: 1.5rem; color: var(--ink); margin-bottom: 1rem; }
     .mission-right p  { font-size: 0.97rem; color: var(--ink-mid); margin-bottom: 1rem; }
     .mission-right p:last-child { margin-bottom: 0; }
     .mission-quote {
       margin-top: 1.8rem; padding: 1.2rem;
-      background: var(--mission-quote);
-      border-radius: 8px; border-left: 3px solid var(--amber);
-      transition: background 0.3s;
+      background: var(--mission-quote); border-radius: 8px;
+      border-left: 3px solid var(--cobalt); transition: background 0.35s;
     }
+    [data-theme="dark"] .mission-quote { border-left-color: var(--cobalt-soft); }
     .mission-quote p { font-family: var(--serif); font-style: italic; font-size: 1.05rem; color: var(--ink); margin: 0; }
 
-    /* ─── STATS ──────────────────────────────────── */
-    .stats-bar { background: var(--stats-bg); padding: 4rem 0; transition: background 0.3s; }
+    /* ═══════════════════════════════════════════════
+       STATS
+    ═══════════════════════════════════════════════ */
+    .stats-bar { background: var(--stats-bg); padding: 4rem 0; transition: background 0.35s; }
     .stats-inner {
       display: grid; grid-template-columns: repeat(3,1fr);
-      gap: 1px;
-      background: rgba(255,255,255,0.06);
+      gap: 1px; background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.06);
       border-radius: 12px; overflow: hidden;
     }
-    .stat-item { padding: 2rem; background: var(--stats-bg); text-align: center; transition: background 0.3s; }
-    .stat-item strong { display: block; font-family: var(--serif); font-size: 2.4rem; color: var(--amber-lt); line-height: 1; margin-bottom: 0.5rem; }
+    .stat-item { padding: 2rem; background: var(--stats-bg); text-align: center; transition: background 0.35s; }
+    .stat-item strong { display: block; font-family: var(--serif); font-size: 2.4rem; color: var(--gold-lt); line-height: 1; margin-bottom: 0.5rem; }
     .stat-item span   { font-size: 0.88rem; color: var(--stats-muted); }
 
-    /* ─── PROGRAMS ───────────────────────────────── */
-    #programs { background: var(--bg-soft); transition: background 0.3s; }
+    /* ═══════════════════════════════════════════════
+       PROGRAMS
+    ═══════════════════════════════════════════════ */
+    #programs { background: var(--bg-soft); transition: background 0.35s; }
     .programs-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem; margin-bottom: 3rem; }
     .program-grid {
       display: grid; grid-template-columns: repeat(2,1fr);
       gap: 1px; background: var(--surface);
-      border: 1px solid var(--surface);
-      border-radius: 14px; overflow: hidden;
+      border: 1px solid var(--surface); border-radius: 14px; overflow: hidden;
     }
     .program-card {
-      background: var(--program-bg); padding: 2rem;
+      background: var(--prog-bg); padding: 2rem;
       transition: background 0.25s; position: relative; overflow: hidden;
     }
     .program-card::before {
       content: ''; position: absolute; top: 0; left: 0; right: 0;
-      height: 3px; background: var(--amber);
+      height: 3px; background: var(--cobalt);
       transform: scaleX(0); transform-origin: left; transition: transform 0.3s;
     }
-    .program-card:hover { background: var(--program-hover); }
+    [data-theme="dark"] .program-card::before { background: var(--cobalt-soft); }
+    .program-card:hover { background: var(--prog-hover); }
     .program-card:hover::before { transform: scaleX(1); }
-    .program-num { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--amber); margin-bottom: 0.8rem; }
+    .program-num { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cobalt); margin-bottom: 0.8rem; }
+    [data-theme="dark"] .program-num { color: var(--cobalt-soft); }
     .program-card h3 { font-family: var(--serif); font-size: 1.3rem; color: var(--ink); margin-bottom: 0.6rem; }
     .program-card p  { font-size: 0.93rem; color: var(--ink-mid); }
 
-    /* ─── NEWSLETTER ─────────────────────────────── */
+    /* ═══════════════════════════════════════════════
+       NEWSLETTER
+    ═══════════════════════════════════════════════ */
     #newsletter { background: var(--bg); }
     .newsletter-layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 3rem; align-items: center; }
     .nl-panel {
-      background: var(--nl-panel);
-      border: 1px solid var(--border); border-radius: 14px; padding: 2rem;
-      transition: background 0.3s;
+      background: var(--nl-panel); border: 1px solid var(--border);
+      border-radius: 14px; padding: 2rem; transition: background 0.35s;
     }
     .nl-panel h3 { font-family: var(--serif); font-size: 1.6rem; color: var(--ink); margin-bottom: 0.6rem; }
     .nl-panel p  { font-size: 0.93rem; color: var(--ink-mid); margin-bottom: 1.4rem; }
@@ -390,47 +450,60 @@
       flex: 1; min-height: 44px; padding: 0 1rem;
       background: var(--input-bg); border: 1.5px solid var(--surface);
       border-radius: 7px; font-family: var(--sans); font-size: 0.93rem; color: var(--ink);
-      outline: none; transition: border-color 0.2s, background 0.3s;
+      outline: none; transition: border-color 0.2s, background 0.35s;
     }
     .form-input::placeholder { color: var(--ink-soft); }
-    .form-input:focus { border-color: var(--amber); }
+    .form-input:focus { border-color: var(--cobalt); }
     .form-note { margin-top: 0.75rem; font-size: 0.82rem; color: var(--ink-soft); }
     .nl-right h3 { font-family: var(--serif); font-size: 1.3rem; color: var(--ink); margin-bottom: 0.9rem; }
     .benefit-list { list-style: none; display: grid; gap: 0.7rem; }
     .benefit-list li { display: flex; gap: 0.75rem; align-items: flex-start; font-size: 0.93rem; color: var(--ink-mid); }
     .benefit-list li::before {
-      content: ''; width: 18px; height: 18px;
-      background: var(--amber-bg); border: 1px solid var(--amber-border); border-radius: 50%;
-      flex-shrink: 0; margin-top: 2px;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 18 18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.5 9l3 3 6-6' stroke='%23C8852A' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      content: ''; width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px;
+      border-radius: 50%; background: rgba(27,45,91,0.07); border: 1px solid rgba(27,45,91,0.18);
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 18 18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.5 9l3 3 6-6' stroke='%231B2D5B' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    }
+    [data-theme="dark"] .benefit-list li::before {
+      background: rgba(56,102,200,0.13); border-color: rgba(56,102,200,0.24);
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 18 18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.5 9l3 3 6-6' stroke='%234878D8' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     }
 
-    /* ─── CONTACT ────────────────────────────────── */
-    #contact { background: var(--contact-bg); border-top: 1px solid var(--border); transition: background 0.3s; }
+    /* ═══════════════════════════════════════════════
+       CONTACT
+    ═══════════════════════════════════════════════ */
+    #contact { background: var(--contact-bg); border-top: 1px solid var(--border); transition: background 0.35s; }
     .contact-inner { max-width: 680px; margin: 0 auto; text-align: center; }
     .contact-inner .section-title { margin-bottom: 0.9rem; }
     .contact-inner .section-body  { max-width: 44ch; margin: 0 auto 2.5rem; }
     .contact-email-card {
       display: inline-flex; align-items: center; gap: 0.9rem;
-      padding: 1rem 1.6rem;
-      background: var(--contact-card); border: 1.5px solid var(--border-strong);
-      border-radius: 10px;
-      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s, background 0.3s;
+      padding: 1rem 1.6rem; background: var(--contact-card);
+      border: 1.5px solid var(--border-strong); border-radius: 10px;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s, background 0.35s;
     }
-    .contact-email-card:hover { border-color: var(--amber); box-shadow: 0 8px 28px var(--shadow-amber); transform: translateY(-3px); }
-    .email-icon { width: 38px; height: 38px; border-radius: 8px; background: var(--amber-bg); border: 1px solid var(--amber-border); display: grid; place-items: center; flex-shrink: 0; }
+    .contact-email-card:hover { border-color: var(--cobalt); box-shadow: 0 8px 28px var(--shadow-cobalt); transform: translateY(-3px); }
+    .email-icon {
+      width: 38px; height: 38px; border-radius: 8px;
+      background: rgba(27,45,91,0.07); border: 1px solid rgba(27,45,91,0.16);
+      display: grid; place-items: center; flex-shrink: 0;
+    }
+    [data-theme="dark"] .email-icon { background: rgba(56,102,200,0.14); border-color: rgba(56,102,200,0.25); }
     .email-icon svg { width: 18px; height: 18px; }
     .contact-email-card strong { display: block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 0.15rem; }
     .contact-email-card a { color: var(--ink); font-weight: 500; font-size: 0.97rem; }
 
-    /* ─── FOOTER ─────────────────────────────────── */
-    footer { background: var(--footer-bg); padding: 2rem 0; transition: background 0.3s; }
+    /* ═══════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════ */
+    footer { background: var(--footer-bg); padding: 2rem 0; transition: background 0.35s; }
     .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
     .footer-brand { display: flex; align-items: center; gap: 0.65rem; }
     .footer-name  { font-family: var(--serif); font-size: 1.05rem; color: var(--footer-text); }
     footer p { font-size: 0.85rem; color: var(--footer-muted); }
 
-    /* ─── RESPONSIVE ─────────────────────────────── */
+    /* ═══════════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════════ */
     @media (max-width: 860px) {
       .hero-inner, .mission-layout, .newsletter-layout { grid-template-columns: 1fr; }
       .hero-photos { height: 260px; order: -1; }
@@ -447,360 +520,434 @@
 </head>
 <body>
 
-  <header class="site-header">
-    <div class="container nav">
+<!-- ═══════════════════════════════════════════════
+     LOADER
+═══════════════════════════════════════════════ -->
+<div id="loader">
+  <div class="loader-stage" id="loaderStage">
+    <div class="loader-ring"></div>
+    <div class="loader-ring" style="inset:-38px;"></div>
+    <!-- 16 tiles injected by JS -->
+    <div class="loader-name" id="loaderName">Open Square</div>
+  </div>
+</div>
 
-      <!-- ── LOGO: fully inline SVG, zero dependency on any image file ── -->
-      <a href="index.html" class="logo-link" aria-label="Open Square home">
+<!-- ═══════════════════════════════════════════════
+     HEADER
+═══════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="container nav">
 
-        <!-- LIGHT version -->
-        <svg class="logo-svg logo-light" xmlns="http://www.w3.org/2000/svg"
-             viewBox="0 0 258 50" width="258" height="50">
-          <!-- 4×4 chess mark (10px cells, 1.5px gaps, top-left at 0,5) -->
-          <rect x="0"    y="6"    width="10" height="10" rx="1.5" fill="#D6CEBC"/>
-          <rect x="11.5" y="6"    width="10" height="10" rx="1.5" fill="#1A1812"/>
-          <rect x="23"   y="6"    width="10" height="10" rx="1.5" fill="#D6CEBC"/>
-          <rect x="34.5" y="6"    width="10" height="10" rx="1.5" fill="#1A1812"/>
-          <rect x="0"    y="17.5" width="10" height="10" rx="1.5" fill="#1A1812"/>
-          <rect x="11.5" y="17.5" width="10" height="10" rx="1.5" fill="#C8852A"/>
-          <rect x="23"   y="17.5" width="10" height="10" rx="1.5" fill="#C8852A"/>
-          <rect x="34.5" y="17.5" width="10" height="10" rx="1.5" fill="#D6CEBC"/>
-          <rect x="0"    y="29"   width="10" height="10" rx="1.5" fill="#D6CEBC"/>
-          <rect x="11.5" y="29"   width="10" height="10" rx="1.5" fill="#C8852A"/>
-          <rect x="23"   y="29"   width="10" height="10" rx="1.5" fill="#C8852A"/>
-          <rect x="34.5" y="29"   width="10" height="10" rx="1.5" fill="#1A1812"/>
-          <rect x="0"    y="40.5" width="10" height="10" rx="1.5" fill="#1A1812"/>
-          <rect x="11.5" y="40.5" width="10" height="10" rx="1.5" fill="#D6CEBC"/>
-          <rect x="23"   y="40.5" width="10" height="10" rx="1.5" fill="#1A1812"/>
-          <rect x="34.5" y="40.5" width="10" height="10" rx="1.5" fill="#D6CEBC"/>
-          <!-- Wordmark -->
-          <text x="56" y="24"
-                font-family="'DM Serif Display', Georgia, serif"
-                font-size="19" fill="#1A1812" letter-spacing="-0.3">Open Square</text>
-          <text x="57" y="40"
-                font-family="'DM Sans', Arial, sans-serif"
-                font-size="7" font-weight="600" fill="#8A8070" letter-spacing="2.2">CHESS OUTREACH</text>
+    <a href="index.html" class="logo-link" aria-label="Open Square home">
+      <!-- LIGHT LOGO -->
+      <svg class="logo-svg logo-light" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 258 50" width="258" height="50">
+        <!-- chess mark: 10px cells, 1.5px gaps, top-left 0,6 -->
+        <rect x="0"    y="6"    width="10" height="10" rx="1.5" fill="#D8CEBB"/>
+        <rect x="11.5" y="6"    width="10" height="10" rx="1.5" fill="#0F1F45"/>
+        <rect x="23"   y="6"    width="10" height="10" rx="1.5" fill="#D8CEBB"/>
+        <rect x="34.5" y="6"    width="10" height="10" rx="1.5" fill="#0F1F45"/>
+        <rect x="0"    y="17.5" width="10" height="10" rx="1.5" fill="#0F1F45"/>
+        <rect x="11.5" y="17.5" width="10" height="10" rx="1.5" fill="#C8922A"/>
+        <rect x="23"   y="17.5" width="10" height="10" rx="1.5" fill="#C8922A"/>
+        <rect x="34.5" y="17.5" width="10" height="10" rx="1.5" fill="#D8CEBB"/>
+        <rect x="0"    y="29"   width="10" height="10" rx="1.5" fill="#D8CEBB"/>
+        <rect x="11.5" y="29"   width="10" height="10" rx="1.5" fill="#C8922A"/>
+        <rect x="23"   y="29"   width="10" height="10" rx="1.5" fill="#C8922A"/>
+        <rect x="34.5" y="29"   width="10" height="10" rx="1.5" fill="#0F1F45"/>
+        <rect x="0"    y="40.5" width="10" height="10" rx="1.5" fill="#0F1F45"/>
+        <rect x="11.5" y="40.5" width="10" height="10" rx="1.5" fill="#D8CEBB"/>
+        <rect x="23"   y="40.5" width="10" height="10" rx="1.5" fill="#0F1F45"/>
+        <rect x="34.5" y="40.5" width="10" height="10" rx="1.5" fill="#D8CEBB"/>
+        <text x="56" y="24"  font-family="'DM Serif Display',Georgia,serif" font-size="19" fill="#0F1F45" letter-spacing="-0.3">Open Square</text>
+        <text x="57" y="40"  font-family="'DM Sans',Arial,sans-serif" font-size="7" font-weight="600" fill="#7A8BAD" letter-spacing="2.2">CHESS OUTREACH</text>
+      </svg>
+
+      <!-- DARK LOGO -->
+      <svg class="logo-svg logo-dark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 258 50" width="258" height="50">
+        <rect x="0"    y="6"    width="10" height="10" rx="1.5" fill="#1E2F50"/>
+        <rect x="11.5" y="6"    width="10" height="10" rx="1.5" fill="#EEE8D8"/>
+        <rect x="23"   y="6"    width="10" height="10" rx="1.5" fill="#1E2F50"/>
+        <rect x="34.5" y="6"    width="10" height="10" rx="1.5" fill="#EEE8D8"/>
+        <rect x="0"    y="17.5" width="10" height="10" rx="1.5" fill="#EEE8D8"/>
+        <rect x="11.5" y="17.5" width="10" height="10" rx="1.5" fill="#D4981E"/>
+        <rect x="23"   y="17.5" width="10" height="10" rx="1.5" fill="#D4981E"/>
+        <rect x="34.5" y="17.5" width="10" height="10" rx="1.5" fill="#1E2F50"/>
+        <rect x="0"    y="29"   width="10" height="10" rx="1.5" fill="#1E2F50"/>
+        <rect x="11.5" y="29"   width="10" height="10" rx="1.5" fill="#D4981E"/>
+        <rect x="23"   y="29"   width="10" height="10" rx="1.5" fill="#D4981E"/>
+        <rect x="34.5" y="29"   width="10" height="10" rx="1.5" fill="#EEE8D8"/>
+        <rect x="0"    y="40.5" width="10" height="10" rx="1.5" fill="#EEE8D8"/>
+        <rect x="11.5" y="40.5" width="10" height="10" rx="1.5" fill="#1E2F50"/>
+        <rect x="23"   y="40.5" width="10" height="10" rx="1.5" fill="#EEE8D8"/>
+        <rect x="34.5" y="40.5" width="10" height="10" rx="1.5" fill="#1E2F50"/>
+        <text x="56" y="24"  font-family="'DM Serif Display',Georgia,serif" font-size="19" fill="#EEE8D8" letter-spacing="-0.3">Open Square</text>
+        <text x="57" y="40"  font-family="'DM Sans',Arial,sans-serif" font-size="7" font-weight="600" fill="#607090" letter-spacing="2.2">CHESS OUTREACH</text>
+      </svg>
+    </a>
+
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="#mission">Mission</a></li>
+        <li><a href="#programs">Programs</a></li>
+        <li><a href="team.html">Team</a></li>
+        <li><a href="#newsletter">Newsletter</a></li>
+        <li><a href="#contact" class="nav-cta">Contact</a></li>
+      </ul>
+      <button class="theme-btn" id="theme-btn" aria-label="Toggle colour mode">
+        <svg class="i-sun" viewBox="0 0 17 17" fill="none">
+          <circle cx="8.5" cy="8.5" r="3" stroke="#EEE8D8" stroke-width="1.4"/>
+          <line x1="8.5" y1="1"    x2="8.5" y2="3"    stroke="#EEE8D8" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="8.5" y1="14"   x2="8.5" y2="16"   stroke="#EEE8D8" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="1"   y1="8.5"  x2="3"   y2="8.5"  stroke="#EEE8D8" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="14"  y1="8.5"  x2="16"  y2="8.5"  stroke="#EEE8D8" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="3.2" y1="3.2"  x2="4.5" y2="4.5"  stroke="#EEE8D8" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="12.5" y1="12.5" x2="13.8" y2="13.8" stroke="#EEE8D8" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="13.8" y1="3.2"  x2="12.5" y2="4.5"  stroke="#EEE8D8" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="4.5"  y1="12.5" x2="3.2"  y2="13.8" stroke="#EEE8D8" stroke-width="1.4" stroke-linecap="round"/>
         </svg>
-
-        <!-- DARK version -->
-        <svg class="logo-svg logo-dark" xmlns="http://www.w3.org/2000/svg"
-             viewBox="0 0 258 50" width="258" height="50">
-          <rect x="0"    y="6"    width="10" height="10" rx="1.5" fill="#2A251D"/>
-          <rect x="11.5" y="6"    width="10" height="10" rx="1.5" fill="#F0EBE0"/>
-          <rect x="23"   y="6"    width="10" height="10" rx="1.5" fill="#2A251D"/>
-          <rect x="34.5" y="6"    width="10" height="10" rx="1.5" fill="#F0EBE0"/>
-          <rect x="0"    y="17.5" width="10" height="10" rx="1.5" fill="#F0EBE0"/>
-          <rect x="11.5" y="17.5" width="10" height="10" rx="1.5" fill="#D4921E"/>
-          <rect x="23"   y="17.5" width="10" height="10" rx="1.5" fill="#D4921E"/>
-          <rect x="34.5" y="17.5" width="10" height="10" rx="1.5" fill="#2A251D"/>
-          <rect x="0"    y="29"   width="10" height="10" rx="1.5" fill="#2A251D"/>
-          <rect x="11.5" y="29"   width="10" height="10" rx="1.5" fill="#D4921E"/>
-          <rect x="23"   y="29"   width="10" height="10" rx="1.5" fill="#D4921E"/>
-          <rect x="34.5" y="29"   width="10" height="10" rx="1.5" fill="#F0EBE0"/>
-          <rect x="0"    y="40.5" width="10" height="10" rx="1.5" fill="#F0EBE0"/>
-          <rect x="11.5" y="40.5" width="10" height="10" rx="1.5" fill="#2A251D"/>
-          <rect x="23"   y="40.5" width="10" height="10" rx="1.5" fill="#F0EBE0"/>
-          <rect x="34.5" y="40.5" width="10" height="10" rx="1.5" fill="#2A251D"/>
-          <text x="56" y="24"
-                font-family="'DM Serif Display', Georgia, serif"
-                font-size="19" fill="#F0EBE0" letter-spacing="-0.3">Open Square</text>
-          <text x="57" y="40"
-                font-family="'DM Sans', Arial, sans-serif"
-                font-size="7" font-weight="600" fill="#7A7065" letter-spacing="2.2">CHESS OUTREACH</text>
+        <svg class="i-moon" viewBox="0 0 17 17" fill="none">
+          <path d="M14.5 10.5A6 6 0 016.5 2.5a6 6 0 108 8z" stroke="#0F1F45" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-
-      </a>
-
-      <div class="nav-right">
-        <ul class="nav-links">
-          <li><a href="#mission">Mission</a></li>
-          <li><a href="#programs">Programs</a></li>
-          <li><a href="team.html">Team</a></li>
-          <li><a href="#newsletter">Newsletter</a></li>
-          <li><a href="#contact" class="nav-cta">Contact</a></li>
-        </ul>
-
-        <!-- Dark / light toggle -->
-        <button class="theme-btn" id="theme-btn" aria-label="Toggle colour mode">
-          <svg class="i-sun" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="8.5" cy="8.5" r="3" stroke="#F0EBE0" stroke-width="1.4"/>
-            <line x1="8.5" y1="1"    x2="8.5" y2="3"    stroke="#F0EBE0" stroke-width="1.4" stroke-linecap="round"/>
-            <line x1="8.5" y1="14"   x2="8.5" y2="16"   stroke="#F0EBE0" stroke-width="1.4" stroke-linecap="round"/>
-            <line x1="1"   y1="8.5"  x2="3"   y2="8.5"  stroke="#F0EBE0" stroke-width="1.4" stroke-linecap="round"/>
-            <line x1="14"  y1="8.5"  x2="16"  y2="8.5"  stroke="#F0EBE0" stroke-width="1.4" stroke-linecap="round"/>
-            <line x1="3.2" y1="3.2"  x2="4.5" y2="4.5"  stroke="#F0EBE0" stroke-width="1.4" stroke-linecap="round"/>
-            <line x1="12.5" y1="12.5" x2="13.8" y2="13.8" stroke="#F0EBE0" stroke-width="1.4" stroke-linecap="round"/>
-            <line x1="13.8" y1="3.2"  x2="12.5" y2="4.5"  stroke="#F0EBE0" stroke-width="1.4" stroke-linecap="round"/>
-            <line x1="4.5"  y1="12.5" x2="3.2"  y2="13.8" stroke="#F0EBE0" stroke-width="1.4" stroke-linecap="round"/>
-          </svg>
-          <svg class="i-moon" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M14.5 10.5A6 6 0 016.5 2.5a6 6 0 108 8z"
-                  stroke="#1A1812" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-      </div>
-
+      </button>
     </div>
-  </header>
+  </div>
+</header>
 
-  <main>
+<main>
 
-    <!-- HERO -->
-    <section class="hero">
-      <div class="container">
-        <div class="hero-inner">
-          <div>
-            <div class="hero-tag reveal">Chess Outreach Initiative</div>
-            <h1 class="reveal d1">
-              Building community<br>through <em>chess.</em>
-            </h1>
-            <p class="hero-desc reveal d2">
-              Open Square uses chess as a vehicle for mentorship, critical thinking,
-              and connection — bringing free programming to students and schools
-              who need it most.
-            </p>
-            <div class="hero-actions reveal d3">
-              <a href="#contact" class="btn btn-dark">Join Us</a>
-              <a href="#programs" class="btn btn-outline">View Programs</a>
-            </div>
-          </div>
-
-          <div class="hero-photos reveal d2">
-            <div class="hero-photo tall">
-              <img src="https://images.unsplash.com/photo-1580541832626-2a7131ee809f?auto=format&fit=crop&w=800&q=80" alt="Students playing chess" loading="lazy"/>
-            </div>
-            <div class="hero-photo">
-              <img src="https://images.unsplash.com/photo-1528819622765-d6bcf132f793?auto=format&fit=crop&w=600&q=80" alt="Chess board" loading="lazy"/>
-            </div>
-            <div class="hero-photo">
-              <img src="https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&w=600&q=80" alt="Student learning chess" loading="lazy"/>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- MARQUEE -->
-    <div class="strip">
-      <div class="marquee-track" aria-hidden="true">
-        <span>Free Tutoring</span><span class="dot">◆</span>
-        <span>School Partnerships</span><span class="dot">◆</span>
-        <span>Community Workshops</span><span class="dot">◆</span>
-        <span>Tournament Mentorship</span><span class="dot">◆</span>
-        <span>Student Leadership</span><span class="dot">◆</span>
-        <span>Free Tutoring</span><span class="dot">◆</span>
-        <span>School Partnerships</span><span class="dot">◆</span>
-        <span>Community Workshops</span><span class="dot">◆</span>
-        <span>Tournament Mentorship</span><span class="dot">◆</span>
-        <span>Student Leadership</span><span class="dot">◆</span>
-        <span>Free Tutoring</span><span class="dot">◆</span>
-        <span>School Partnerships</span><span class="dot">◆</span>
-        <span>Community Workshops</span><span class="dot">◆</span>
-        <span>Tournament Mentorship</span><span class="dot">◆</span>
-        <span>Student Leadership</span><span class="dot">◆</span>
-      </div>
-    </div>
-
-    <!-- MISSION -->
-    <section id="mission">
-      <div class="container">
-        <div class="section-label reveal">Mission</div>
-        <h2 class="section-title reveal d1">Using chess to build<br><em>confidence and opportunity.</em></h2>
-        <div class="mission-layout">
-          <div class="mission-left">
-            <p class="section-body reveal">
-              Open Square believes chess can open doors. We make those benefits more
-              accessible through free programming, strong mentorship, and partnerships
-              with schools and community spaces.
-            </p>
-            <div class="pillars">
-              <div class="pillar reveal">
-                <div class="pillar-num">01</div>
-                <div><h4>Access</h4><p>Free, approachable chess education for every student and school that wants it.</p></div>
-              </div>
-              <div class="pillar reveal d1">
-                <div class="pillar-num">02</div>
-                <div><h4>Mentorship</h4><p>Instruction paired with encouragement, leadership development, and confidence-building.</p></div>
-              </div>
-              <div class="pillar reveal d2">
-                <div class="pillar-num">03</div>
-                <div><h4>Community</h4><p>Spaces where students, families, and educators connect through shared learning.</p></div>
-              </div>
-            </div>
-          </div>
-          <div class="mission-right reveal d1">
-            <h3>How we work</h3>
-            <p>Our programs are flexible and responsive to community needs. Whether a school wants help launching a chess club, a youth program needs volunteers, or students need free tutoring — we provide thoughtful, practical, locally-grounded support.</p>
-            <p>We see chess not only as a game, but as a platform for academic growth, mentorship, and stronger community ties.</p>
-            <div class="mission-quote">
-              <p>"Chess teaches patience, problem-solving, and the power of thinking ahead — skills that matter far beyond the board."</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- STATS -->
-    <div class="stats-bar">
-      <div class="container">
-        <div class="stats-inner">
-          <div class="stat-item reveal"><strong>Free</strong><span>No-cost learning for every student and school</span></div>
-          <div class="stat-item reveal d1"><strong>Community</strong><span>Built for underrepresented neighborhoods</span></div>
-          <div class="stat-item reveal d2"><strong>Mentorship</strong><span>Chess instruction paired with leadership development</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- PROGRAMS -->
-    <section id="programs">
-      <div class="container">
-        <div class="programs-head">
-          <div>
-            <div class="section-label reveal">Programs</div>
-            <h2 class="section-title reveal d1">Designed to grow skills,<br><em>leadership, and community.</em></h2>
-          </div>
-          <p class="section-body reveal d2" style="max-width:38ch;text-align:right;">
-            From first-time players to tournament competitors — we have programming for every stage of the journey.
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <div>
+          <div class="hero-tag reveal">Chess Outreach Initiative</div>
+          <h1 class="reveal d1">Building community<br>through <em>chess.</em></h1>
+          <p class="hero-desc reveal d2">
+            Open Square uses chess as a vehicle for mentorship, critical thinking,
+            and connection — bringing free programming to students and schools who need it most.
           </p>
-        </div>
-        <div class="program-grid reveal">
-          <article class="program-card">
-            <div class="program-num">Program 01</div>
-            <h3>Free Chess Tutoring</h3>
-            <p>One-on-one and small-group instruction that builds confidence, teaches core strategy, and supports consistent improvement.</p>
-          </article>
-          <article class="program-card">
-            <div class="program-num">Program 02</div>
-            <h3>School Chess Clubs</h3>
-            <p>Support for starting and sustaining school-based chess communities where students learn, practice, and grow together.</p>
-          </article>
-          <article class="program-card">
-            <div class="program-num">Program 03</div>
-            <h3>Community Workshops</h3>
-            <p>Introductory and themed workshops for schools, libraries, and youth spaces that make chess welcoming and fun.</p>
-          </article>
-          <article class="program-card">
-            <div class="program-num">Program 04</div>
-            <h3>Tournament Mentorship</h3>
-            <p>Guidance for students entering competitive play — preparation, strategy development, and structured encouragement.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- NEWSLETTER -->
-    <section id="newsletter">
-      <div class="container">
-        <div class="newsletter-layout">
-          <div class="nl-panel reveal">
-            <h3>Stay in the loop.</h3>
-            <p>Get updates on programs, workshops, partnerships, and volunteer opportunities.</p>
-            <form onsubmit="handleSubscribe(event)">
-              <div class="form-row">
-                <input class="form-input" type="email" id="nl-email" placeholder="your@email.com" required/>
-                <button type="submit" class="btn btn-dark" id="sub-btn">Subscribe</button>
-              </div>
-              <p class="form-note">No spam, ever. Connect to your backend when ready.</p>
-            </form>
+          <div class="hero-actions reveal d3">
+            <a href="#contact" class="btn btn-cobalt">Join Us</a>
+            <a href="#programs" class="btn btn-outline">View Programs</a>
           </div>
-          <div class="nl-right reveal d1">
-            <div class="section-label">What you'll receive</div>
-            <h3>Regular updates on our outreach work.</h3>
-            <ul class="benefit-list" style="margin-top:1.2rem;">
-              <li>New program announcements and launches</li>
-              <li>Upcoming community events and workshops</li>
-              <li>Volunteer and partnership opportunities</li>
-              <li>Student stories and progress highlights</li>
-              <li>School collaboration updates</li>
-            </ul>
+        </div>
+        <div class="hero-photos reveal d2">
+          <div class="hero-photo tall">
+            <img src="https://images.unsplash.com/photo-1580541832626-2a7131ee809f?auto=format&fit=crop&w=800&q=80" alt="Students playing chess" loading="lazy"/>
+          </div>
+          <div class="hero-photo">
+            <img src="https://images.unsplash.com/photo-1528819622765-d6bcf132f793?auto=format&fit=crop&w=600&q=80" alt="Chess board" loading="lazy"/>
+          </div>
+          <div class="hero-photo">
+            <img src="https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&w=600&q=80" alt="Student learning chess" loading="lazy"/>
           </div>
         </div>
       </div>
-    </section>
-
-    <!-- CONTACT -->
-    <section id="contact">
-      <div class="container">
-        <div class="contact-inner">
-          <div class="section-label reveal">Contact</div>
-          <h2 class="section-title reveal d1">Help us grow community<br><em>through chess.</em></h2>
-          <p class="section-body reveal d2">
-            We welcome students, volunteers, schools, and community partners who want to support accessible chess education and outreach.
-          </p>
-          <a href="mailto:TheOpenSquareInitiative@gmail.com" class="contact-email-card reveal d3">
-            <div class="email-icon">
-              <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="2" y="4" width="14" height="10" rx="2" stroke="#C8852A" stroke-width="1.5"/>
-                <path d="M2 6l7 5 7-5" stroke="#C8852A" stroke-width="1.5" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <div>
-              <strong>Email us</strong>
-              <a href="mailto:TheOpenSquareInitiative@gmail.com">TheOpenSquareInitiative@gmail.com</a>
-            </div>
-          </a>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- FOOTER — always uses the dark-mode mark colours since the footer is always dark -->
-  <footer>
-    <div class="container footer-inner">
-      <div class="footer-brand">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="26" height="26" aria-hidden="true">
-          <rect x="0"    y="0"    width="5.5" height="5.5" rx="1" fill="#3A352A"/>
-          <rect x="7.5"  y="0"    width="5.5" height="5.5" rx="1" fill="#EDE8DC"/>
-          <rect x="15"   y="0"    width="5.5" height="5.5" rx="1" fill="#3A352A"/>
-          <rect x="22.5" y="0"    width="5.5" height="5.5" rx="1" fill="#EDE8DC"/>
-          <rect x="0"    y="7.5"  width="5.5" height="5.5" rx="1" fill="#EDE8DC"/>
-          <rect x="7.5"  y="7.5"  width="5.5" height="5.5" rx="1" fill="#D4921E"/>
-          <rect x="15"   y="7.5"  width="5.5" height="5.5" rx="1" fill="#D4921E"/>
-          <rect x="22.5" y="7.5"  width="5.5" height="5.5" rx="1" fill="#3A352A"/>
-          <rect x="0"    y="15"   width="5.5" height="5.5" rx="1" fill="#3A352A"/>
-          <rect x="7.5"  y="15"   width="5.5" height="5.5" rx="1" fill="#D4921E"/>
-          <rect x="15"   y="15"   width="5.5" height="5.5" rx="1" fill="#D4921E"/>
-          <rect x="22.5" y="15"   width="5.5" height="5.5" rx="1" fill="#EDE8DC"/>
-          <rect x="0"    y="22.5" width="5.5" height="5.5" rx="1" fill="#EDE8DC"/>
-          <rect x="7.5"  y="22.5" width="5.5" height="5.5" rx="1" fill="#3A352A"/>
-          <rect x="15"   y="22.5" width="5.5" height="5.5" rx="1" fill="#EDE8DC"/>
-          <rect x="22.5" y="22.5" width="5.5" height="5.5" rx="1" fill="#3A352A"/>
-        </svg>
-        <span class="footer-name">Open Square</span>
-      </div>
-      <p>© 2026 Open Square · Student-led chess outreach</p>
     </div>
-  </footer>
+  </section>
 
-  <script>
-    /* scroll reveal */
-    const obs = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-    document.querySelectorAll('.hero .reveal').forEach(el => setTimeout(() => el.classList.add('visible'), 50));
+  <!-- MARQUEE -->
+  <div class="strip">
+    <div class="marquee-track" aria-hidden="true">
+      <span>Free Tutoring</span><span class="dot">◆</span>
+      <span>School Partnerships</span><span class="dot">◆</span>
+      <span>Community Workshops</span><span class="dot">◆</span>
+      <span>Tournament Mentorship</span><span class="dot">◆</span>
+      <span>Student Leadership</span><span class="dot">◆</span>
+      <span>Free Tutoring</span><span class="dot">◆</span>
+      <span>School Partnerships</span><span class="dot">◆</span>
+      <span>Community Workshops</span><span class="dot">◆</span>
+      <span>Tournament Mentorship</span><span class="dot">◆</span>
+      <span>Student Leadership</span><span class="dot">◆</span>
+      <span>Free Tutoring</span><span class="dot">◆</span>
+      <span>School Partnerships</span><span class="dot">◆</span>
+      <span>Community Workshops</span><span class="dot">◆</span>
+      <span>Tournament Mentorship</span><span class="dot">◆</span>
+      <span>Student Leadership</span><span class="dot">◆</span>
+    </div>
+  </div>
 
-    /* theme toggle — persists via localStorage */
-    const html = document.documentElement;
-    const btn  = document.getElementById('theme-btn');
-    const saved = localStorage.getItem('os-theme');
-    if (saved) html.setAttribute('data-theme', saved);
-    btn.addEventListener('click', () => {
-      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      html.setAttribute('data-theme', next);
-      localStorage.setItem('os-theme', next);
-    });
+  <!-- MISSION -->
+  <section id="mission">
+    <div class="container">
+      <div class="section-label reveal">Mission</div>
+      <h2 class="section-title reveal d1">Using chess to build<br><em>confidence and opportunity.</em></h2>
+      <div class="mission-layout">
+        <div class="mission-left">
+          <p class="section-body reveal">
+            Open Square believes chess can open doors. We make those benefits more accessible
+            through free programming, strong mentorship, and partnerships with schools and community spaces.
+          </p>
+          <div class="pillars">
+            <div class="pillar reveal">
+              <div class="pillar-num">01</div>
+              <div><h4>Access</h4><p>Free, approachable chess education for every student and school that wants it.</p></div>
+            </div>
+            <div class="pillar reveal d1">
+              <div class="pillar-num">02</div>
+              <div><h4>Mentorship</h4><p>Instruction paired with encouragement, leadership development, and confidence-building.</p></div>
+            </div>
+            <div class="pillar reveal d2">
+              <div class="pillar-num">03</div>
+              <div><h4>Community</h4><p>Spaces where students, families, and educators connect through shared learning.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="mission-right reveal d1">
+          <h3>How we work</h3>
+          <p>Our programs are flexible and responsive to community needs. Whether a school wants help launching a chess club, a youth program needs volunteers, or students need free tutoring — we provide thoughtful, practical, locally-grounded support.</p>
+          <p>We see chess not only as a game, but as a platform for academic growth, mentorship, and stronger community ties.</p>
+          <div class="mission-quote">
+            <p>"Chess teaches patience, problem-solving, and the power of thinking ahead — skills that matter far beyond the board."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    /* newsletter */
-    function handleSubscribe(e) {
-      e.preventDefault();
-      const b = document.getElementById('sub-btn');
-      const i = document.getElementById('nl-email');
-      b.textContent = 'Subscribed ✓';
-      b.style.background = '#2D6A4F';
-      b.disabled = true; i.disabled = true;
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="container">
+      <div class="stats-inner">
+        <div class="stat-item reveal"><strong>Free</strong><span>No-cost learning for every student and school</span></div>
+        <div class="stat-item reveal d1"><strong>Community</strong><span>Built for underrepresented neighborhoods</span></div>
+        <div class="stat-item reveal d2"><strong>Mentorship</strong><span>Chess instruction paired with leadership development</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRAMS -->
+  <section id="programs">
+    <div class="container">
+      <div class="programs-head">
+        <div>
+          <div class="section-label reveal">Programs</div>
+          <h2 class="section-title reveal d1">Designed to grow skills,<br><em>leadership, and community.</em></h2>
+        </div>
+        <p class="section-body reveal d2" style="max-width:38ch;text-align:right;">
+          From first-time players to tournament competitors — programming for every stage of the journey.
+        </p>
+      </div>
+      <div class="program-grid reveal">
+        <article class="program-card">
+          <div class="program-num">Program 01</div>
+          <h3>Free Chess Tutoring</h3>
+          <p>One-on-one and small-group instruction that builds confidence, teaches core strategy, and supports consistent improvement.</p>
+        </article>
+        <article class="program-card">
+          <div class="program-num">Program 02</div>
+          <h3>School Chess Clubs</h3>
+          <p>Support for starting and sustaining school-based chess communities where students learn, practice, and grow together.</p>
+        </article>
+        <article class="program-card">
+          <div class="program-num">Program 03</div>
+          <h3>Community Workshops</h3>
+          <p>Introductory and themed workshops for schools, libraries, and youth spaces that make chess welcoming and fun.</p>
+        </article>
+        <article class="program-card">
+          <div class="program-num">Program 04</div>
+          <h3>Tournament Mentorship</h3>
+          <p>Guidance for students entering competitive play — preparation, strategy development, and structured encouragement.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section id="newsletter">
+    <div class="container">
+      <div class="newsletter-layout">
+        <div class="nl-panel reveal">
+          <h3>Stay in the loop.</h3>
+          <p>Get updates on programs, workshops, partnerships, and volunteer opportunities.</p>
+          <form onsubmit="handleSubscribe(event)">
+            <div class="form-row">
+              <input class="form-input" type="email" id="nl-email" placeholder="your@email.com" required/>
+              <button type="submit" class="btn btn-cobalt" id="sub-btn">Subscribe</button>
+            </div>
+            <p class="form-note">No spam, ever. Connect to your backend when ready.</p>
+          </form>
+        </div>
+        <div class="nl-right reveal d1">
+          <div class="section-label">What you'll receive</div>
+          <h3>Regular updates on our outreach work.</h3>
+          <ul class="benefit-list" style="margin-top:1.2rem;">
+            <li>New program announcements and launches</li>
+            <li>Upcoming community events and workshops</li>
+            <li>Volunteer and partnership opportunities</li>
+            <li>Student stories and progress highlights</li>
+            <li>School collaboration updates</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="container">
+      <div class="contact-inner">
+        <div class="section-label reveal">Contact</div>
+        <h2 class="section-title reveal d1">Help us grow community<br><em>through chess.</em></h2>
+        <p class="section-body reveal d2">
+          We welcome students, volunteers, schools, and community partners who want to support accessible chess education and outreach.
+        </p>
+        <a href="mailto:TheOpenSquareInitiative@gmail.com" class="contact-email-card reveal d3">
+          <div class="email-icon">
+            <svg viewBox="0 0 18 18" fill="none">
+              <rect x="2" y="4" width="14" height="10" rx="2" stroke="#1B2D5B" stroke-width="1.5"/>
+              <path d="M2 6l7 5 7-5" stroke="#1B2D5B" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <strong>Email us</strong>
+            <a href="mailto:TheOpenSquareInitiative@gmail.com">TheOpenSquareInitiative@gmail.com</a>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="26" height="26" aria-hidden="true">
+        <rect x="0"    y="0"    width="5.5" height="5.5" rx="1" fill="#1E2F50"/>
+        <rect x="7.5"  y="0"    width="5.5" height="5.5" rx="1" fill="#EEE8D8"/>
+        <rect x="15"   y="0"    width="5.5" height="5.5" rx="1" fill="#1E2F50"/>
+        <rect x="22.5" y="0"    width="5.5" height="5.5" rx="1" fill="#EEE8D8"/>
+        <rect x="0"    y="7.5"  width="5.5" height="5.5" rx="1" fill="#EEE8D8"/>
+        <rect x="7.5"  y="7.5"  width="5.5" height="5.5" rx="1" fill="#D4981E"/>
+        <rect x="15"   y="7.5"  width="5.5" height="5.5" rx="1" fill="#D4981E"/>
+        <rect x="22.5" y="7.5"  width="5.5" height="5.5" rx="1" fill="#1E2F50"/>
+        <rect x="0"    y="15"   width="5.5" height="5.5" rx="1" fill="#1E2F50"/>
+        <rect x="7.5"  y="15"   width="5.5" height="5.5" rx="1" fill="#D4981E"/>
+        <rect x="15"   y="15"   width="5.5" height="5.5" rx="1" fill="#D4981E"/>
+        <rect x="22.5" y="15"   width="5.5" height="5.5" rx="1" fill="#EEE8D8"/>
+        <rect x="0"    y="22.5" width="5.5" height="5.5" rx="1" fill="#EEE8D8"/>
+        <rect x="7.5"  y="22.5" width="5.5" height="5.5" rx="1" fill="#1E2F50"/>
+        <rect x="15"   y="22.5" width="5.5" height="5.5" rx="1" fill="#EEE8D8"/>
+        <rect x="22.5" y="22.5" width="5.5" height="5.5" rx="1" fill="#1E2F50"/>
+      </svg>
+      <span class="footer-name">Open Square</span>
+    </div>
+    <p>© 2026 Open Square · Student-led chess outreach</p>
+  </div>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════
+   LOADER — puzzle tiles fly into place
+═══════════════════════════════════════ */
+(function() {
+  const stage = document.getElementById('loaderStage');
+  const loaderEl = document.getElementById('loader');
+  const nameEl = document.getElementById('loaderName');
+
+  // Grid: 4 cols × 4 rows, 24px cell, 3px gap → total 108px, centered in 120px stage
+  // Offset to center: (120 - 108) / 2 = 6
+  const CELL = 24, GAP = 3, OFFSET = 6;
+
+  // Tile colour map matching the logo logic
+  // 0=dark-cobalt, 1=cream, 2=gold
+  const colours = [
+    [1,0,1,0],
+    [0,2,2,1],
+    [1,2,2,0],
+    [0,1,0,1],
+  ];
+  const COL = { 0:'#1B2D5B', 1:'#EBE4D5', 2:'#C8922A' };
+
+  // Spawn offset directions — each tile flies in from a different direction
+  const offsets = [
+    [-60,-60],[ 0,-80],[60,-60],[ 80, 0],
+    [ 60, 60],[ 0, 80],[-60, 60],[-80, 0],
+    [-50,-50],[50,-50],[50, 50],[-50, 50],
+    [-70, 0],[ 0,-70],[70, 0],[ 0, 70],
+  ];
+
+  const tiles = [];
+  let idx = 0;
+  for (let r = 0; r < 4; r++) {
+    for (let c = 0; c < 4; c++) {
+      const tile = document.createElement('div');
+      tile.className = 'tile';
+      tile.style.cssText = `
+        left:${OFFSET + c*(CELL+GAP)}px;
+        top:${OFFSET + r*(CELL+GAP)}px;
+        background:${COL[colours[r][c]]};
+        --tx:${offsets[idx][0]}px;
+        --ty:${offsets[idx][1]}px;
+      `;
+      stage.appendChild(tile);
+      tiles.push(tile);
+      idx++;
     }
-  </script>
+  }
+
+  // Stagger tiles in row-by-row with slight column offset
+  // Total animation window: ~1000ms, then dismiss
+  let delay = 0;
+  const rowDelay = 80, colDelay = 40, dur = 420;
+
+  tiles.forEach((tile, i) => {
+    const row = Math.floor(i / 4);
+    const col = i % 4;
+    const d = row * rowDelay + col * colDelay;
+    setTimeout(() => {
+      tile.style.animation = `tileIn ${dur}ms cubic-bezier(0.22,1,0.36,1) forwards`;
+    }, d);
+  });
+
+  // Show name once grid is mostly in
+  setTimeout(() => nameEl.classList.add('show'), 640);
+
+  // Dismiss
+  setTimeout(() => {
+    loaderEl.classList.add('done');
+    // after fade-out, remove from flow
+    setTimeout(() => loaderEl.style.display = 'none', 500);
+  }, 1500);
+})();
+
+/* ═══════════════════════════════════════
+   SCROLL REVEAL
+═══════════════════════════════════════ */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+document.querySelectorAll('.hero .reveal').forEach(el => setTimeout(() => el.classList.add('visible'), 1600));
+
+/* ═══════════════════════════════════════
+   THEME TOGGLE
+═══════════════════════════════════════ */
+const html = document.documentElement;
+const btn  = document.getElementById('theme-btn');
+const saved = localStorage.getItem('os-theme');
+if (saved) html.setAttribute('data-theme', saved);
+btn.addEventListener('click', () => {
+  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('os-theme', next);
+});
+
+/* ═══════════════════════════════════════
+   NEWSLETTER
+═══════════════════════════════════════ */
+function handleSubscribe(e) {
+  e.preventDefault();
+  const b = document.getElementById('sub-btn');
+  const i = document.getElementById('nl-email');
+  b.textContent = 'Subscribed ✓';
+  b.style.background = '#1B5E3A';
+  b.disabled = true; i.disabled = true;
+}
+</script>
 </body>
 </html>
