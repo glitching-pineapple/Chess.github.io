@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" width="320" height="80">
+  <!--
+    Open Square — Primary Logo (Light Background)
+    Mark: 4×4 chess grid with amber accent squares
+    Colors: Ink #1A1812 | Sand #D6CEBC | Amber #C8852A | Ivory #F9F6EF
+  -->
+
+  <!-- 4×4 chess mark: 14px cells, 1.5px gaps. Total ~62px. Top-left at (0,9) -->
+  <!-- Row 1 -->
+  <rect x="0"    y="9"  width="14" height="14" rx="1.5" fill="#D6CEBC"/>
+  <rect x="15.5" y="9"  width="14" height="14" rx="1.5" fill="#1A1812"/>
+  <rect x="31"   y="9"  width="14" height="14" rx="1.5" fill="#D6CEBC"/>
+  <rect x="46.5" y="9"  width="14" height="14" rx="1.5" fill="#1A1812"/>
+  <!-- Row 2 -->
+  <rect x="0"    y="24.5" width="14" height="14" rx="1.5" fill="#1A1812"/>
+  <rect x="15.5" y="24.5" width="14" height="14" rx="1.5" fill="#C8852A"/>
+  <rect x="31"   y="24.5" width="14" height="14" rx="1.5" fill="#C8852A"/>
+  <rect x="46.5" y="24.5" width="14" height="14" rx="1.5" fill="#D6CEBC"/>
+  <!-- Row 3 -->
+  <rect x="0"    y="40" width="14" height="14" rx="1.5" fill="#D6CEBC"/>
+  <rect x="15.5" y="40" width="14" height="14" rx="1.5" fill="#C8852A"/>
+  <rect x="31"   y="40" width="14" height="14" rx="1.5" fill="#C8852A"/>
+  <rect x="46.5" y="40" width="14" height="14" rx="1.5" fill="#1A1812"/>
+  <!-- Row 4 -->
+  <rect x="0"    y="55.5" width="14" height="14" rx="1.5" fill="#1A1812"/>
+  <rect x="15.5" y="55.5" width="14" height="14" rx="1.5" fill="#D6CEBC"/>
+  <rect x="31"   y="55.5" width="14" height="14" rx="1.5" fill="#1A1812"/>
+  <rect x="46.5" y="55.5" width="14" height="14" rx="1.5" fill="#D6CEBC"/>
+
+  <!-- Wordmark -->
+  <text
+    x="74"
+    y="41"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="26"
+    font-weight="normal"
+    fill="#1A1812"
+    letter-spacing="-0.4"
+    dominant-baseline="central">Open Square</text>
+
+  <!-- Tagline -->
+  <text
+    x="75"
+    y="62"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="8.5"
+    font-weight="700"
+    fill="#8A8070"
+    letter-spacing="2.2"
+    dominant-baseline="central">CHESS OUTREACH INITIATIVE</text>
+</svg>
