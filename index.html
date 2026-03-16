@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-  <link rel="icon" type="image/png" href="logo-opensquare.svg" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Open Square — Chess Outreach Initiative</title>
@@ -9,37 +8,87 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
+    /* ─── LIGHT TOKENS ───────────────────────────── */
     :root {
-      --ivory:   #F9F6EF;
-      --sand:    #EDE8DC;
-      --stone:   #D6CEBC;
-      --ink:     #1A1812;
-      --ink-mid: #4A4538;
-      --ink-soft:#8A8070;
-      --amber:   #C8852A;
-      --amber-lt:#F2C46A;
-      --amber-bg:#FDF4E3;
-      --border:  rgba(26,24,18,0.10);
-      --radius:  10px;
-      --max:     1120px;
+      --bg:            #F9F6EF;
+      --bg-soft:       #EDE8DC;
+      --surface:       #D6CEBC;
+      --ink:           #1A1812;
+      --ink-mid:       #4A4538;
+      --ink-soft:      #8A8070;
+      --border:        rgba(26,24,18,0.10);
+      --border-strong: rgba(26,24,18,0.18);
+      --amber:         #C8852A;
+      --amber-lt:      #F2C46A;
+      --amber-bg:      #FDF4E3;
+      --amber-border:  rgba(200,133,42,0.25);
+      --header-bg:     rgba(249,246,239,0.92);
+      --strip-bg:      #EDE8DC;
+      --stats-bg:      #1A1812;
+      --stats-muted:   rgba(249,246,239,0.55);
+      --footer-bg:     #1A1812;
+      --footer-text:   rgba(249,246,239,0.7);
+      --footer-muted:  rgba(249,246,239,0.4);
+      --mission-card:  #EDE8DC;
+      --mission-quote: #F9F6EF;
+      --program-bg:    #EDE8DC;
+      --program-hover: #F9F6EF;
+      --contact-bg:    #EDE8DC;
+      --contact-card:  #F9F6EF;
+      --input-bg:      #F9F6EF;
+      --nl-panel:      #EDE8DC;
+      --shadow-amber:  rgba(200,133,42,0.12);
+      --radius: 10px;
+      --max:    1120px;
       --serif: 'DM Serif Display', Georgia, serif;
       --sans:  'DM Sans', system-ui, sans-serif;
     }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ─── DARK TOKENS ────────────────────────────── */
+    [data-theme="dark"] {
+      --bg:            #13110D;
+      --bg-soft:       #1C1914;
+      --surface:       #2A251D;
+      --ink:           #F0EBE0;
+      --ink-mid:       #B8AD9E;
+      --ink-soft:      #7A7065;
+      --border:        rgba(240,235,224,0.08);
+      --border-strong: rgba(240,235,224,0.14);
+      --amber:         #D4921E;
+      --amber-lt:      #F2C46A;
+      --amber-bg:      rgba(212,146,30,0.12);
+      --amber-border:  rgba(212,146,30,0.28);
+      --header-bg:     rgba(19,17,13,0.93);
+      --strip-bg:      #1C1914;
+      --stats-bg:      #0E0C09;
+      --stats-muted:   rgba(240,235,224,0.45);
+      --footer-bg:     #0E0C09;
+      --footer-text:   rgba(240,235,224,0.65);
+      --footer-muted:  rgba(240,235,224,0.35);
+      --mission-card:  #1C1914;
+      --mission-quote: #13110D;
+      --program-bg:    #1C1914;
+      --program-hover: #232018;
+      --contact-bg:    #1C1914;
+      --contact-card:  #13110D;
+      --input-bg:      #13110D;
+      --nl-panel:      #1C1914;
+      --shadow-amber:  rgba(212,146,30,0.18);
+    }
 
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
 
     body {
       font-family: var(--sans);
-      background: var(--ivory);
+      background: var(--bg);
       color: var(--ink);
       line-height: 1.65;
       overflow-x: hidden;
+      transition: background 0.3s, color 0.3s;
     }
-
     img { display: block; max-width: 100%; }
-    a { color: inherit; text-decoration: none; }
+    a   { color: inherit; text-decoration: none; }
 
     .container {
       width: min(var(--max), calc(100% - 2.5rem));
@@ -48,14 +97,12 @@
 
     /* ─── HEADER ─────────────────────────────────── */
     .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(249,246,239,0.92);
+      position: sticky; top: 0; z-index: 100;
+      background: var(--header-bg);
       backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
+      transition: background 0.3s, border-color 0.3s;
     }
-
     .nav {
       display: flex;
       align-items: center;
@@ -64,29 +111,25 @@
       min-height: 70px;
     }
 
-    .logo {
+    /* ─── INLINE SVG LOGO ────────────────────────── */
+    .logo-link {
       display: flex;
       align-items: center;
-      gap: 11px;
-    }
-    .logo-mark {
-      width: 36px;
-      height: 36px;
-      background: var(--ink);
-      border-radius: 8px;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
       flex-shrink: 0;
+      text-decoration: none;
     }
-    .logo-mark img { width: 100%; height: 100%; object-fit: contain; }
-    .logo-name {
-      font-family: var(--serif);
-      font-size: 1.15rem;
-      color: var(--ink);
-      letter-spacing: -0.01em;
-    }
+    .logo-svg { display: block; }
+    .logo-light { display: block; }
+    .logo-dark  { display: none;  }
+    [data-theme="dark"] .logo-light { display: none;  }
+    [data-theme="dark"] .logo-dark  { display: block; }
 
+    /* ─── NAV ────────────────────────────────────── */
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
     .nav-links {
       display: flex;
       align-items: center;
@@ -97,59 +140,65 @@
       font-size: 0.9rem;
       font-weight: 500;
       color: var(--ink-mid);
-      letter-spacing: 0.01em;
       transition: color 0.2s;
     }
     .nav-links a:hover { color: var(--ink); }
     .nav-cta {
-      padding: 0.55rem 1.1rem;
+      padding: 0.55rem 1.1rem !important;
       background: var(--ink) !important;
-      color: var(--ivory) !important;
+      color: var(--bg) !important;
       border-radius: 6px;
       font-size: 0.88rem !important;
       font-weight: 600 !important;
       transition: background 0.2s, transform 0.15s !important;
     }
-    .nav-cta:hover {
-      background: var(--amber) !important;
-      transform: translateY(-1px);
-    }
+    .nav-cta:hover { background: var(--amber) !important; transform: translateY(-1px); }
 
-    /* ─── REVEAL ANIMATION ───────────────────────── */
+    /* ─── THEME TOGGLE ───────────────────────────── */
+    .theme-btn {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--border-strong);
+      background: transparent;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .theme-btn:hover { background: var(--bg-soft); }
+    .theme-btn svg { width: 17px; height: 17px; display: block; }
+    .i-sun  { display: none;  }
+    .i-moon { display: block; }
+    [data-theme="dark"] .i-sun  { display: block; }
+    [data-theme="dark"] .i-moon { display: none;  }
+
+    /* ─── REVEAL ─────────────────────────────────── */
     .reveal {
       opacity: 0;
-      transform: translateY(28px);
+      transform: translateY(26px);
       transition: opacity 0.7s ease, transform 0.7s ease;
     }
-    .reveal.visible {
-      opacity: 1;
-      transform: none;
-    }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal.visible { opacity: 1; transform: none; }
+    .d1 { transition-delay: 0.1s; }
+    .d2 { transition-delay: 0.2s; }
+    .d3 { transition-delay: 0.3s; }
 
     /* ─── HERO ───────────────────────────────────── */
-    .hero {
-      padding: 5rem 0 4rem;
-      overflow: hidden;
-    }
-
+    .hero { padding: 5rem 0 4rem; overflow: hidden; }
     .hero-inner {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 3rem;
       align-items: center;
     }
-
     .hero-tag {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
       padding: 0.35rem 0.8rem;
       background: var(--amber-bg);
-      border: 1px solid rgba(200,133,42,0.25);
+      border: 1px solid var(--amber-border);
       border-radius: 100px;
       font-size: 0.78rem;
       font-weight: 600;
@@ -159,13 +208,9 @@
       margin-bottom: 1.5rem;
     }
     .hero-tag::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      background: var(--amber);
-      border-radius: 50%;
+      content: ''; width: 6px; height: 6px;
+      background: var(--amber); border-radius: 50%;
     }
-
     .hero h1 {
       font-family: var(--serif);
       font-size: clamp(2.8rem, 5vw, 4.2rem);
@@ -174,28 +219,13 @@
       color: var(--ink);
       margin-bottom: 1.4rem;
     }
-    .hero h1 em {
-      font-style: italic;
-      color: var(--amber);
-    }
-
-    .hero-desc {
-      font-size: 1.05rem;
-      color: var(--ink-mid);
-      max-width: 46ch;
-      margin-bottom: 2rem;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
+    .hero h1 em { font-style: italic; color: var(--amber); }
+    .hero-desc { font-size: 1.05rem; color: var(--ink-mid); max-width: 46ch; margin-bottom: 2rem; }
+    .hero-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
 
     .btn {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
       padding: 0.75rem 1.4rem;
       border-radius: 7px;
       font-family: var(--sans);
@@ -206,26 +236,11 @@
       transition: all 0.2s;
       text-decoration: none;
     }
-    .btn-dark {
-      background: var(--ink);
-      color: var(--ivory);
-    }
-    .btn-dark:hover {
-      background: var(--amber);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(200,133,42,0.25);
-    }
-    .btn-outline {
-      background: transparent;
-      color: var(--ink);
-      border-color: var(--stone);
-    }
-    .btn-outline:hover {
-      border-color: var(--ink);
-      transform: translateY(-2px);
-    }
+    .btn-dark { background: var(--ink); color: var(--bg); }
+    .btn-dark:hover { background: var(--amber); transform: translateY(-2px); box-shadow: 0 6px 20px var(--shadow-amber); }
+    .btn-outline { background: transparent; color: var(--ink); border-color: var(--surface); }
+    .btn-outline:hover { border-color: var(--ink); transform: translateY(-2px); }
 
-    /* hero photos */
     .hero-photos {
       display: grid;
       grid-template-columns: 1.2fr 1fr;
@@ -233,464 +248,194 @@
       gap: 0.7rem;
       height: 420px;
     }
-    .hero-photo {
-      border-radius: 10px;
-      overflow: hidden;
-      position: relative;
-    }
-    .hero-photo img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.6s ease;
-    }
+    .hero-photo { border-radius: 10px; overflow: hidden; position: relative; }
+    .hero-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
     .hero-photo:hover img { transform: scale(1.04); }
     .hero-photo.tall { grid-row: span 2; }
     .hero-photo::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, transparent 50%, rgba(26,24,18,0.15));
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.15));
       pointer-events: none;
     }
 
-    /* ─── MARQUEE STRIP ──────────────────────────── */
+    /* ─── MARQUEE ────────────────────────────────── */
     .strip {
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
       padding: 0.9rem 0;
-      background: var(--sand);
+      background: var(--strip-bg);
       overflow: hidden;
+      transition: background 0.3s;
     }
     .marquee-track {
-      display: flex;
-      gap: 3rem;
+      display: flex; gap: 3rem;
       white-space: nowrap;
       animation: marquee 22s linear infinite;
     }
     .marquee-track span {
-      font-size: 0.82rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--ink-mid);
-      flex-shrink: 0;
+      font-size: 0.82rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--ink-mid); flex-shrink: 0;
     }
-    .marquee-track span.dot {
-      color: var(--amber);
-    }
-    @keyframes marquee {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
+    .marquee-track .dot { color: var(--amber); }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-    /* ─── SECTIONS ───────────────────────────────── */
+    /* ─── COMMON SECTION ─────────────────────────── */
     section { padding: 5.5rem 0; }
-
     .section-label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--amber);
-      margin-bottom: 0.75rem;
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--amber); margin-bottom: 0.75rem;
     }
-
     .section-title {
       font-family: var(--serif);
       font-size: clamp(2rem, 4vw, 2.8rem);
-      line-height: 1.08;
-      letter-spacing: -0.02em;
-      color: var(--ink);
-      margin-bottom: 1rem;
+      line-height: 1.08; letter-spacing: -0.02em;
+      color: var(--ink); margin-bottom: 1rem;
     }
     .section-title em { font-style: italic; }
-
-    .section-body {
-      font-size: 1rem;
-      color: var(--ink-mid);
-      max-width: 52ch;
-    }
+    .section-body { font-size: 1rem; color: var(--ink-mid); max-width: 52ch; }
 
     /* ─── MISSION ────────────────────────────────── */
-    #mission { background: var(--ivory); }
-
+    #mission { background: var(--bg); }
     .mission-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: start;
-      margin-top: 3.5rem;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: start; margin-top: 3.5rem;
     }
-
     .mission-left .section-body { margin-bottom: 2.5rem; }
-
     .pillars { display: grid; gap: 1.1rem; }
-
     .pillar {
-      display: flex;
-      gap: 1rem;
-      align-items: flex-start;
+      display: flex; gap: 1rem; align-items: flex-start;
       padding: 1.1rem;
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      background: var(--ivory);
-      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+      background: var(--bg);
+      transition: border-color 0.2s, transform 0.2s, background 0.3s;
     }
-    .pillar:hover {
-      border-color: var(--amber);
-      box-shadow: 0 4px 20px rgba(200,133,42,0.08);
-      transform: translateX(4px);
-    }
+    .pillar:hover { border-color: var(--amber); box-shadow: 0 4px 20px var(--shadow-amber); transform: translateX(4px); }
     .pillar-num {
-      width: 32px;
-      height: 32px;
-      border-radius: 6px;
-      background: var(--amber-bg);
-      border: 1px solid rgba(200,133,42,0.2);
-      display: grid;
-      place-items: center;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--amber);
-      flex-shrink: 0;
+      width: 32px; height: 32px; border-radius: 6px;
+      background: var(--amber-bg); border: 1px solid var(--amber-border);
+      display: grid; place-items: center;
+      font-size: 0.75rem; font-weight: 700; color: var(--amber); flex-shrink: 0;
     }
-    .pillar h4 {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--ink);
-      margin-bottom: 0.2rem;
-    }
-    .pillar p {
-      font-size: 0.9rem;
-      color: var(--ink-soft);
-    }
-
+    .pillar h4 { font-size: 0.95rem; font-weight: 600; color: var(--ink); margin-bottom: 0.2rem; }
+    .pillar p  { font-size: 0.9rem; color: var(--ink-soft); }
     .mission-right {
-      background: var(--sand);
-      border-radius: 14px;
-      padding: 2rem;
-      border: 1px solid var(--stone);
+      background: var(--mission-card);
+      border-radius: 14px; padding: 2rem;
+      border: 1px solid var(--border);
+      transition: background 0.3s;
     }
-    .mission-right h3 {
-      font-family: var(--serif);
-      font-size: 1.5rem;
-      color: var(--ink);
-      margin-bottom: 1rem;
-      line-height: 1.2;
-    }
-    .mission-right p {
-      font-size: 0.97rem;
-      color: var(--ink-mid);
-      margin-bottom: 1rem;
-    }
+    .mission-right h3 { font-family: var(--serif); font-size: 1.5rem; color: var(--ink); margin-bottom: 1rem; }
+    .mission-right p  { font-size: 0.97rem; color: var(--ink-mid); margin-bottom: 1rem; }
     .mission-right p:last-child { margin-bottom: 0; }
-
     .mission-quote {
-      margin-top: 1.8rem;
-      padding: 1.2rem;
-      background: var(--ivory);
-      border-radius: 8px;
-      border-left: 3px solid var(--amber);
+      margin-top: 1.8rem; padding: 1.2rem;
+      background: var(--mission-quote);
+      border-radius: 8px; border-left: 3px solid var(--amber);
+      transition: background 0.3s;
     }
-    .mission-quote p {
-      font-family: var(--serif);
-      font-style: italic;
-      font-size: 1.05rem;
-      color: var(--ink);
-      margin: 0;
-    }
-
-    /* ─── PROGRAMS ───────────────────────────────── */
-    #programs { background: var(--sand); }
-
-    .programs-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: 2rem;
-      margin-bottom: 3rem;
-    }
-
-    .program-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1px;
-      background: var(--stone);
-      border: 1px solid var(--stone);
-      border-radius: 14px;
-      overflow: hidden;
-    }
-
-    .program-card {
-      background: var(--sand);
-      padding: 2rem;
-      transition: background 0.25s;
-      position: relative;
-      overflow: hidden;
-    }
-    .program-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: var(--amber);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.3s ease;
-    }
-    .program-card:hover { background: var(--ivory); }
-    .program-card:hover::before { transform: scaleX(1); }
-
-    .program-num {
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--amber);
-      margin-bottom: 0.8rem;
-    }
-    .program-card h3 {
-      font-family: var(--serif);
-      font-size: 1.3rem;
-      color: var(--ink);
-      margin-bottom: 0.6rem;
-    }
-    .program-card p {
-      font-size: 0.93rem;
-      color: var(--ink-mid);
-    }
+    .mission-quote p { font-family: var(--serif); font-style: italic; font-size: 1.05rem; color: var(--ink); margin: 0; }
 
     /* ─── STATS ──────────────────────────────────── */
-    .stats-bar {
-      background: var(--ink);
-      padding: 4rem 0;
-    }
+    .stats-bar { background: var(--stats-bg); padding: 4rem 0; transition: background 0.3s; }
     .stats-inner {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      display: grid; grid-template-columns: repeat(3,1fr);
       gap: 1px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-      overflow: hidden;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px; overflow: hidden;
     }
-    .stat-item {
-      padding: 2rem;
-      background: var(--ink);
-      text-align: center;
+    .stat-item { padding: 2rem; background: var(--stats-bg); text-align: center; transition: background 0.3s; }
+    .stat-item strong { display: block; font-family: var(--serif); font-size: 2.4rem; color: var(--amber-lt); line-height: 1; margin-bottom: 0.5rem; }
+    .stat-item span   { font-size: 0.88rem; color: var(--stats-muted); }
+
+    /* ─── PROGRAMS ───────────────────────────────── */
+    #programs { background: var(--bg-soft); transition: background 0.3s; }
+    .programs-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem; margin-bottom: 3rem; }
+    .program-grid {
+      display: grid; grid-template-columns: repeat(2,1fr);
+      gap: 1px; background: var(--surface);
+      border: 1px solid var(--surface);
+      border-radius: 14px; overflow: hidden;
     }
-    .stat-item strong {
-      display: block;
-      font-family: var(--serif);
-      font-size: 2.4rem;
-      color: var(--amber-lt);
-      line-height: 1;
-      margin-bottom: 0.5rem;
+    .program-card {
+      background: var(--program-bg); padding: 2rem;
+      transition: background 0.25s; position: relative; overflow: hidden;
     }
-    .stat-item span {
-      font-size: 0.88rem;
-      color: rgba(249,246,239,0.55);
-      font-weight: 400;
+    .program-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; background: var(--amber);
+      transform: scaleX(0); transform-origin: left; transition: transform 0.3s;
     }
+    .program-card:hover { background: var(--program-hover); }
+    .program-card:hover::before { transform: scaleX(1); }
+    .program-num { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--amber); margin-bottom: 0.8rem; }
+    .program-card h3 { font-family: var(--serif); font-size: 1.3rem; color: var(--ink); margin-bottom: 0.6rem; }
+    .program-card p  { font-size: 0.93rem; color: var(--ink-mid); }
 
     /* ─── NEWSLETTER ─────────────────────────────── */
-    #newsletter { background: var(--ivory); }
-
-    .newsletter-layout {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 3rem;
-      align-items: center;
+    #newsletter { background: var(--bg); }
+    .newsletter-layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 3rem; align-items: center; }
+    .nl-panel {
+      background: var(--nl-panel);
+      border: 1px solid var(--border); border-radius: 14px; padding: 2rem;
+      transition: background 0.3s;
     }
-
-    .newsletter-form-area {
-      background: var(--sand);
-      border: 1px solid var(--stone);
-      border-radius: 14px;
-      padding: 2rem;
-    }
-    .newsletter-form-area h3 {
-      font-family: var(--serif);
-      font-size: 1.6rem;
-      color: var(--ink);
-      margin-bottom: 0.6rem;
-    }
-    .newsletter-form-area p {
-      font-size: 0.93rem;
-      color: var(--ink-mid);
-      margin-bottom: 1.4rem;
-    }
-
-    .form-row {
-      display: flex;
-      gap: 0.6rem;
-    }
+    .nl-panel h3 { font-family: var(--serif); font-size: 1.6rem; color: var(--ink); margin-bottom: 0.6rem; }
+    .nl-panel p  { font-size: 0.93rem; color: var(--ink-mid); margin-bottom: 1.4rem; }
+    .form-row { display: flex; gap: 0.6rem; }
     .form-input {
-      flex: 1;
-      min-height: 44px;
-      padding: 0 1rem;
-      background: var(--ivory);
-      border: 1.5px solid var(--stone);
-      border-radius: 7px;
-      font-family: var(--sans);
-      font-size: 0.93rem;
-      color: var(--ink);
-      outline: none;
-      transition: border-color 0.2s;
+      flex: 1; min-height: 44px; padding: 0 1rem;
+      background: var(--input-bg); border: 1.5px solid var(--surface);
+      border-radius: 7px; font-family: var(--sans); font-size: 0.93rem; color: var(--ink);
+      outline: none; transition: border-color 0.2s, background 0.3s;
     }
     .form-input::placeholder { color: var(--ink-soft); }
     .form-input:focus { border-color: var(--amber); }
-
-    .form-note {
-      margin-top: 0.75rem;
-      font-size: 0.82rem;
-      color: var(--ink-soft);
-    }
-
-    .newsletter-right h3 {
-      font-family: var(--serif);
-      font-size: 1.3rem;
-      color: var(--ink);
-      margin-bottom: 0.9rem;
-    }
-
-    .benefit-list {
-      list-style: none;
-      display: grid;
-      gap: 0.7rem;
-    }
-    .benefit-list li {
-      display: flex;
-      gap: 0.75rem;
-      align-items: flex-start;
-      font-size: 0.93rem;
-      color: var(--ink-mid);
-    }
+    .form-note { margin-top: 0.75rem; font-size: 0.82rem; color: var(--ink-soft); }
+    .nl-right h3 { font-family: var(--serif); font-size: 1.3rem; color: var(--ink); margin-bottom: 0.9rem; }
+    .benefit-list { list-style: none; display: grid; gap: 0.7rem; }
+    .benefit-list li { display: flex; gap: 0.75rem; align-items: flex-start; font-size: 0.93rem; color: var(--ink-mid); }
     .benefit-list li::before {
-      content: '';
-      width: 18px;
-      height: 18px;
-      background: var(--amber-bg);
-      border: 1px solid rgba(200,133,42,0.3);
-      border-radius: 50%;
-      flex-shrink: 0;
-      margin-top: 2px;
+      content: ''; width: 18px; height: 18px;
+      background: var(--amber-bg); border: 1px solid var(--amber-border); border-radius: 50%;
+      flex-shrink: 0; margin-top: 2px;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 18 18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.5 9l3 3 6-6' stroke='%23C8852A' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     }
 
     /* ─── CONTACT ────────────────────────────────── */
-    #contact {
-      background: var(--sand);
-      border-top: 1px solid var(--border);
-    }
-
-    .contact-inner {
-      max-width: 680px;
-      margin: 0 auto;
-      text-align: center;
-    }
+    #contact { background: var(--contact-bg); border-top: 1px solid var(--border); transition: background 0.3s; }
+    .contact-inner { max-width: 680px; margin: 0 auto; text-align: center; }
     .contact-inner .section-title { margin-bottom: 0.9rem; }
-    .contact-inner .section-body {
-      max-width: 44ch;
-      margin: 0 auto 2.5rem;
-    }
-
+    .contact-inner .section-body  { max-width: 44ch; margin: 0 auto 2.5rem; }
     .contact-email-card {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.9rem;
+      display: inline-flex; align-items: center; gap: 0.9rem;
       padding: 1rem 1.6rem;
-      background: var(--ivory);
-      border: 1.5px solid var(--stone);
+      background: var(--contact-card); border: 1.5px solid var(--border-strong);
       border-radius: 10px;
-      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s, background 0.3s;
     }
-    .contact-email-card:hover {
-      border-color: var(--amber);
-      box-shadow: 0 8px 28px rgba(200,133,42,0.12);
-      transform: translateY(-3px);
-    }
-    .email-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 8px;
-      background: var(--amber-bg);
-      border: 1px solid rgba(200,133,42,0.2);
-      display: grid;
-      place-items: center;
-      flex-shrink: 0;
-    }
+    .contact-email-card:hover { border-color: var(--amber); box-shadow: 0 8px 28px var(--shadow-amber); transform: translateY(-3px); }
+    .email-icon { width: 38px; height: 38px; border-radius: 8px; background: var(--amber-bg); border: 1px solid var(--amber-border); display: grid; place-items: center; flex-shrink: 0; }
     .email-icon svg { width: 18px; height: 18px; }
-    .contact-email-card strong {
-      display: block;
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--ink-soft);
-      margin-bottom: 0.15rem;
-    }
-    .contact-email-card a {
-      color: var(--ink);
-      font-weight: 500;
-      font-size: 0.97rem;
-    }
+    .contact-email-card strong { display: block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 0.15rem; }
+    .contact-email-card a { color: var(--ink); font-weight: 500; font-size: 0.97rem; }
 
     /* ─── FOOTER ─────────────────────────────────── */
-    footer {
-      background: var(--ink);
-      padding: 2rem 0;
-    }
-    .footer-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-    .footer-logo {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-family: var(--serif);
-      font-size: 1.05rem;
-      color: rgba(249,246,239,0.7);
-    }
-    .footer-logo img {
-      width: 28px; height: 28px;
-      border-radius: 5px;
-      object-fit: contain;
-      opacity: 0.8;
-    }
-    footer p {
-      font-size: 0.85rem;
-      color: rgba(249,246,239,0.4);
-    }
+    footer { background: var(--footer-bg); padding: 2rem 0; transition: background 0.3s; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .footer-brand { display: flex; align-items: center; gap: 0.65rem; }
+    .footer-name  { font-family: var(--serif); font-size: 1.05rem; color: var(--footer-text); }
+    footer p { font-size: 0.85rem; color: var(--footer-muted); }
 
     /* ─── RESPONSIVE ─────────────────────────────── */
     @media (max-width: 860px) {
-      .hero-inner,
-      .mission-layout,
-      .newsletter-layout {
-        grid-template-columns: 1fr;
-      }
-      .hero-photos {
-        height: 260px;
-        order: -1;
-      }
-      .programs-head {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .program-grid {
-        grid-template-columns: 1fr;
-      }
-      .stats-inner {
-        grid-template-columns: 1fr;
-      }
+      .hero-inner, .mission-layout, .newsletter-layout { grid-template-columns: 1fr; }
+      .hero-photos { height: 260px; order: -1; }
+      .programs-head { flex-direction: column; align-items: flex-start; }
+      .program-grid, .stats-inner { grid-template-columns: 1fr; }
     }
     @media (max-width: 600px) {
       .nav-links { gap: 1rem; }
@@ -702,22 +447,99 @@
 </head>
 <body>
 
-  <!-- HEADER -->
   <header class="site-header">
     <div class="container nav">
-      <a href="index.html" class="logo" aria-label="Open Square home">
-        <span class="logo-mark">
-          <img src="logo-opensquare.svg" alt="Open Square logo" />
-        </span>
-        <span class="logo-name">Open Square</span>
+
+      <!-- ── LOGO: fully inline SVG, zero dependency on any image file ── -->
+      <a href="index.html" class="logo-link" aria-label="Open Square home">
+
+        <!-- LIGHT version -->
+        <svg class="logo-svg logo-light" xmlns="http://www.w3.org/2000/svg"
+             viewBox="0 0 258 50" width="258" height="50">
+          <!-- 4×4 chess mark (10px cells, 1.5px gaps, top-left at 0,5) -->
+          <rect x="0"    y="6"    width="10" height="10" rx="1.5" fill="#D6CEBC"/>
+          <rect x="11.5" y="6"    width="10" height="10" rx="1.5" fill="#1A1812"/>
+          <rect x="23"   y="6"    width="10" height="10" rx="1.5" fill="#D6CEBC"/>
+          <rect x="34.5" y="6"    width="10" height="10" rx="1.5" fill="#1A1812"/>
+          <rect x="0"    y="17.5" width="10" height="10" rx="1.5" fill="#1A1812"/>
+          <rect x="11.5" y="17.5" width="10" height="10" rx="1.5" fill="#C8852A"/>
+          <rect x="23"   y="17.5" width="10" height="10" rx="1.5" fill="#C8852A"/>
+          <rect x="34.5" y="17.5" width="10" height="10" rx="1.5" fill="#D6CEBC"/>
+          <rect x="0"    y="29"   width="10" height="10" rx="1.5" fill="#D6CEBC"/>
+          <rect x="11.5" y="29"   width="10" height="10" rx="1.5" fill="#C8852A"/>
+          <rect x="23"   y="29"   width="10" height="10" rx="1.5" fill="#C8852A"/>
+          <rect x="34.5" y="29"   width="10" height="10" rx="1.5" fill="#1A1812"/>
+          <rect x="0"    y="40.5" width="10" height="10" rx="1.5" fill="#1A1812"/>
+          <rect x="11.5" y="40.5" width="10" height="10" rx="1.5" fill="#D6CEBC"/>
+          <rect x="23"   y="40.5" width="10" height="10" rx="1.5" fill="#1A1812"/>
+          <rect x="34.5" y="40.5" width="10" height="10" rx="1.5" fill="#D6CEBC"/>
+          <!-- Wordmark -->
+          <text x="56" y="24"
+                font-family="'DM Serif Display', Georgia, serif"
+                font-size="19" fill="#1A1812" letter-spacing="-0.3">Open Square</text>
+          <text x="57" y="40"
+                font-family="'DM Sans', Arial, sans-serif"
+                font-size="7" font-weight="600" fill="#8A8070" letter-spacing="2.2">CHESS OUTREACH</text>
+        </svg>
+
+        <!-- DARK version -->
+        <svg class="logo-svg logo-dark" xmlns="http://www.w3.org/2000/svg"
+             viewBox="0 0 258 50" width="258" height="50">
+          <rect x="0"    y="6"    width="10" height="10" rx="1.5" fill="#2A251D"/>
+          <rect x="11.5" y="6"    width="10" height="10" rx="1.5" fill="#F0EBE0"/>
+          <rect x="23"   y="6"    width="10" height="10" rx="1.5" fill="#2A251D"/>
+          <rect x="34.5" y="6"    width="10" height="10" rx="1.5" fill="#F0EBE0"/>
+          <rect x="0"    y="17.5" width="10" height="10" rx="1.5" fill="#F0EBE0"/>
+          <rect x="11.5" y="17.5" width="10" height="10" rx="1.5" fill="#D4921E"/>
+          <rect x="23"   y="17.5" width="10" height="10" rx="1.5" fill="#D4921E"/>
+          <rect x="34.5" y="17.5" width="10" height="10" rx="1.5" fill="#2A251D"/>
+          <rect x="0"    y="29"   width="10" height="10" rx="1.5" fill="#2A251D"/>
+          <rect x="11.5" y="29"   width="10" height="10" rx="1.5" fill="#D4921E"/>
+          <rect x="23"   y="29"   width="10" height="10" rx="1.5" fill="#D4921E"/>
+          <rect x="34.5" y="29"   width="10" height="10" rx="1.5" fill="#F0EBE0"/>
+          <rect x="0"    y="40.5" width="10" height="10" rx="1.5" fill="#F0EBE0"/>
+          <rect x="11.5" y="40.5" width="10" height="10" rx="1.5" fill="#2A251D"/>
+          <rect x="23"   y="40.5" width="10" height="10" rx="1.5" fill="#F0EBE0"/>
+          <rect x="34.5" y="40.5" width="10" height="10" rx="1.5" fill="#2A251D"/>
+          <text x="56" y="24"
+                font-family="'DM Serif Display', Georgia, serif"
+                font-size="19" fill="#F0EBE0" letter-spacing="-0.3">Open Square</text>
+          <text x="57" y="40"
+                font-family="'DM Sans', Arial, sans-serif"
+                font-size="7" font-weight="600" fill="#7A7065" letter-spacing="2.2">CHESS OUTREACH</text>
+        </svg>
+
       </a>
-      <ul class="nav-links">
-        <li><a href="#mission">Mission</a></li>
-        <li><a href="#programs">Programs</a></li>
-        <li><a href="team.html">Team</a></li>
-        <li><a href="#newsletter">Newsletter</a></li>
-        <li><a href="#contact" class="nav-cta">Contact</a></li>
-      </ul>
+
+      <div class="nav-right">
+        <ul class="nav-links">
+          <li><a href="#mission">Mission</a></li>
+          <li><a href="#programs">Programs</a></li>
+          <li><a href="team.html">Team</a></li>
+          <li><a href="#newsletter">Newsletter</a></li>
+          <li><a href="#contact" class="nav-cta">Contact</a></li>
+        </ul>
+
+        <!-- Dark / light toggle -->
+        <button class="theme-btn" id="theme-btn" aria-label="Toggle colour mode">
+          <svg class="i-sun" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="8.5" cy="8.5" r="3" stroke="#F0EBE0" stroke-width="1.4"/>
+            <line x1="8.5" y1="1"    x2="8.5" y2="3"    stroke="#F0EBE0" stroke-width="1.4" stroke-linecap="round"/>
+            <line x1="8.5" y1="14"   x2="8.5" y2="16"   stroke="#F0EBE0" stroke-width="1.4" stroke-linecap="round"/>
+            <line x1="1"   y1="8.5"  x2="3"   y2="8.5"  stroke="#F0EBE0" stroke-width="1.4" stroke-linecap="round"/>
+            <line x1="14"  y1="8.5"  x2="16"  y2="8.5"  stroke="#F0EBE0" stroke-width="1.4" stroke-linecap="round"/>
+            <line x1="3.2" y1="3.2"  x2="4.5" y2="4.5"  stroke="#F0EBE0" stroke-width="1.4" stroke-linecap="round"/>
+            <line x1="12.5" y1="12.5" x2="13.8" y2="13.8" stroke="#F0EBE0" stroke-width="1.4" stroke-linecap="round"/>
+            <line x1="13.8" y1="3.2"  x2="12.5" y2="4.5"  stroke="#F0EBE0" stroke-width="1.4" stroke-linecap="round"/>
+            <line x1="4.5"  y1="12.5" x2="3.2"  y2="13.8" stroke="#F0EBE0" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          <svg class="i-moon" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14.5 10.5A6 6 0 016.5 2.5a6 6 0 108 8z"
+                  stroke="#1A1812" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
     </div>
   </header>
 
@@ -729,37 +551,36 @@
         <div class="hero-inner">
           <div>
             <div class="hero-tag reveal">Chess Outreach Initiative</div>
-            <h1 class="reveal reveal-delay-1">
-              Building community<br>
-              through <em>chess.</em>
+            <h1 class="reveal d1">
+              Building community<br>through <em>chess.</em>
             </h1>
-            <p class="hero-desc reveal reveal-delay-2">
+            <p class="hero-desc reveal d2">
               Open Square uses chess as a vehicle for mentorship, critical thinking,
               and connection — bringing free programming to students and schools
               who need it most.
             </p>
-            <div class="hero-actions reveal reveal-delay-3">
+            <div class="hero-actions reveal d3">
               <a href="#contact" class="btn btn-dark">Join Us</a>
               <a href="#programs" class="btn btn-outline">View Programs</a>
             </div>
           </div>
 
-          <div class="hero-photos reveal reveal-delay-2">
+          <div class="hero-photos reveal d2">
             <div class="hero-photo tall">
-              <img src="https://images.unsplash.com/photo-1580541832626-2a7131ee809f?auto=format&fit=crop&w=800&q=80" alt="Students playing chess" loading="lazy" />
+              <img src="https://images.unsplash.com/photo-1580541832626-2a7131ee809f?auto=format&fit=crop&w=800&q=80" alt="Students playing chess" loading="lazy"/>
             </div>
             <div class="hero-photo">
-              <img src="https://images.unsplash.com/photo-1528819622765-d6bcf132f793?auto=format&fit=crop&w=600&q=80" alt="Chess board closeup" loading="lazy" />
+              <img src="https://images.unsplash.com/photo-1528819622765-d6bcf132f793?auto=format&fit=crop&w=600&q=80" alt="Chess board" loading="lazy"/>
             </div>
             <div class="hero-photo">
-              <img src="https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&w=600&q=80" alt="Student learning chess" loading="lazy" />
+              <img src="https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&w=600&q=80" alt="Student learning chess" loading="lazy"/>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- STRIP MARQUEE -->
+    <!-- MARQUEE -->
     <div class="strip">
       <div class="marquee-track" aria-hidden="true">
         <span>Free Tutoring</span><span class="dot">◆</span>
@@ -784,8 +605,7 @@
     <section id="mission">
       <div class="container">
         <div class="section-label reveal">Mission</div>
-        <h2 class="section-title reveal reveal-delay-1">Using chess to build<br><em>confidence and opportunity.</em></h2>
-
+        <h2 class="section-title reveal d1">Using chess to build<br><em>confidence and opportunity.</em></h2>
         <div class="mission-layout">
           <div class="mission-left">
             <p class="section-body reveal">
@@ -796,43 +616,24 @@
             <div class="pillars">
               <div class="pillar reveal">
                 <div class="pillar-num">01</div>
-                <div>
-                  <h4>Access</h4>
-                  <p>Free, approachable chess education for every student and school that wants it.</p>
-                </div>
+                <div><h4>Access</h4><p>Free, approachable chess education for every student and school that wants it.</p></div>
               </div>
-              <div class="pillar reveal reveal-delay-1">
+              <div class="pillar reveal d1">
                 <div class="pillar-num">02</div>
-                <div>
-                  <h4>Mentorship</h4>
-                  <p>Instruction paired with encouragement, leadership development, and confidence-building.</p>
-                </div>
+                <div><h4>Mentorship</h4><p>Instruction paired with encouragement, leadership development, and confidence-building.</p></div>
               </div>
-              <div class="pillar reveal reveal-delay-2">
+              <div class="pillar reveal d2">
                 <div class="pillar-num">03</div>
-                <div>
-                  <h4>Community</h4>
-                  <p>Spaces where students, families, and educators connect through shared learning.</p>
-                </div>
+                <div><h4>Community</h4><p>Spaces where students, families, and educators connect through shared learning.</p></div>
               </div>
             </div>
           </div>
-
-          <div class="mission-right reveal reveal-delay-1">
+          <div class="mission-right reveal d1">
             <h3>How we work</h3>
-            <p>
-              Our programs are flexible and responsive to community needs. Whether a
-              school wants help launching a chess club, a youth program needs
-              volunteers, or students need free tutoring — we provide thoughtful,
-              practical, locally-grounded support.
-            </p>
-            <p>
-              We see chess not only as a game, but as a platform for academic
-              growth, mentorship, and stronger community ties.
-            </p>
+            <p>Our programs are flexible and responsive to community needs. Whether a school wants help launching a chess club, a youth program needs volunteers, or students need free tutoring — we provide thoughtful, practical, locally-grounded support.</p>
+            <p>We see chess not only as a game, but as a platform for academic growth, mentorship, and stronger community ties.</p>
             <div class="mission-quote">
-              <p>"Chess teaches patience, problem-solving, and the power of thinking
-              ahead — skills that matter far beyond the board."</p>
+              <p>"Chess teaches patience, problem-solving, and the power of thinking ahead — skills that matter far beyond the board."</p>
             </div>
           </div>
         </div>
@@ -843,18 +644,9 @@
     <div class="stats-bar">
       <div class="container">
         <div class="stats-inner">
-          <div class="stat-item reveal">
-            <strong>Free</strong>
-            <span>No-cost learning for every student and school</span>
-          </div>
-          <div class="stat-item reveal reveal-delay-1">
-            <strong>Community</strong>
-            <span>Built for underrepresented neighborhoods</span>
-          </div>
-          <div class="stat-item reveal reveal-delay-2">
-            <strong>Mentorship</strong>
-            <span>Chess instruction paired with leadership development</span>
-          </div>
+          <div class="stat-item reveal"><strong>Free</strong><span>No-cost learning for every student and school</span></div>
+          <div class="stat-item reveal d1"><strong>Community</strong><span>Built for underrepresented neighborhoods</span></div>
+          <div class="stat-item reveal d2"><strong>Mentorship</strong><span>Chess instruction paired with leadership development</span></div>
         </div>
       </div>
     </div>
@@ -865,38 +657,32 @@
         <div class="programs-head">
           <div>
             <div class="section-label reveal">Programs</div>
-            <h2 class="section-title reveal reveal-delay-1">Designed to grow skills,<br><em>leadership, and community.</em></h2>
+            <h2 class="section-title reveal d1">Designed to grow skills,<br><em>leadership, and community.</em></h2>
           </div>
-          <p class="section-body reveal reveal-delay-2" style="max-width:38ch; text-align:right;">
-            From first-time players to tournament competitors — we have programming
-            for every stage of the journey.
+          <p class="section-body reveal d2" style="max-width:38ch;text-align:right;">
+            From first-time players to tournament competitors — we have programming for every stage of the journey.
           </p>
         </div>
-
         <div class="program-grid reveal">
           <article class="program-card">
             <div class="program-num">Program 01</div>
             <h3>Free Chess Tutoring</h3>
-            <p>One-on-one and small-group instruction that builds confidence,
-            teaches core strategy, and supports consistent improvement.</p>
+            <p>One-on-one and small-group instruction that builds confidence, teaches core strategy, and supports consistent improvement.</p>
           </article>
           <article class="program-card">
             <div class="program-num">Program 02</div>
             <h3>School Chess Clubs</h3>
-            <p>Support for starting and sustaining school-based chess communities
-            where students learn, practice, and grow together.</p>
+            <p>Support for starting and sustaining school-based chess communities where students learn, practice, and grow together.</p>
           </article>
           <article class="program-card">
             <div class="program-num">Program 03</div>
             <h3>Community Workshops</h3>
-            <p>Introductory and themed workshops for schools, libraries, and youth
-            spaces that make chess welcoming and fun.</p>
+            <p>Introductory and themed workshops for schools, libraries, and youth spaces that make chess welcoming and fun.</p>
           </article>
           <article class="program-card">
             <div class="program-num">Program 04</div>
             <h3>Tournament Mentorship</h3>
-            <p>Guidance for students entering competitive play — preparation,
-            strategy development, and structured encouragement.</p>
+            <p>Guidance for students entering competitive play — preparation, strategy development, and structured encouragement.</p>
           </article>
         </div>
       </div>
@@ -906,25 +692,18 @@
     <section id="newsletter">
       <div class="container">
         <div class="newsletter-layout">
-          <div class="newsletter-form-area reveal">
+          <div class="nl-panel reveal">
             <h3>Stay in the loop.</h3>
             <p>Get updates on programs, workshops, partnerships, and volunteer opportunities.</p>
-            <form class="newsletter-form" onsubmit="handleSubscribe(event)">
+            <form onsubmit="handleSubscribe(event)">
               <div class="form-row">
-                <input
-                  class="form-input"
-                  type="email"
-                  id="newsletter-email"
-                  placeholder="your@email.com"
-                  required
-                />
-                <button type="submit" class="btn btn-dark" id="subscribe-btn">Subscribe</button>
+                <input class="form-input" type="email" id="nl-email" placeholder="your@email.com" required/>
+                <button type="submit" class="btn btn-dark" id="sub-btn">Subscribe</button>
               </div>
               <p class="form-note">No spam, ever. Connect to your backend when ready.</p>
             </form>
           </div>
-
-          <div class="newsletter-right reveal reveal-delay-1">
+          <div class="nl-right reveal d1">
             <div class="section-label">What you'll receive</div>
             <h3>Regular updates on our outreach work.</h3>
             <ul class="benefit-list" style="margin-top:1.2rem;">
@@ -944,14 +723,11 @@
       <div class="container">
         <div class="contact-inner">
           <div class="section-label reveal">Contact</div>
-          <h2 class="section-title reveal reveal-delay-1">
-            Help us grow community<br><em>through chess.</em>
-          </h2>
-          <p class="section-body reveal reveal-delay-2">
-            We welcome students, volunteers, schools, and community partners
-            who want to support accessible chess education and outreach.
+          <h2 class="section-title reveal d1">Help us grow community<br><em>through chess.</em></h2>
+          <p class="section-body reveal d2">
+            We welcome students, volunteers, schools, and community partners who want to support accessible chess education and outreach.
           </p>
-          <a href="mailto:TheOpenSquareInitiative@gmail.com" class="contact-email-card reveal reveal-delay-3">
+          <a href="mailto:TheOpenSquareInitiative@gmail.com" class="contact-email-card reveal d3">
             <div class="email-icon">
               <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="2" y="4" width="14" height="10" rx="2" stroke="#C8852A" stroke-width="1.5"/>
@@ -969,43 +745,61 @@
 
   </main>
 
+  <!-- FOOTER — always uses the dark-mode mark colours since the footer is always dark -->
   <footer>
     <div class="container footer-inner">
-      <div class="footer-logo">
-        <img src="logo-opensquare.svg" alt="Open Square" />
-        Open Square
+      <div class="footer-brand">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="26" height="26" aria-hidden="true">
+          <rect x="0"    y="0"    width="5.5" height="5.5" rx="1" fill="#3A352A"/>
+          <rect x="7.5"  y="0"    width="5.5" height="5.5" rx="1" fill="#EDE8DC"/>
+          <rect x="15"   y="0"    width="5.5" height="5.5" rx="1" fill="#3A352A"/>
+          <rect x="22.5" y="0"    width="5.5" height="5.5" rx="1" fill="#EDE8DC"/>
+          <rect x="0"    y="7.5"  width="5.5" height="5.5" rx="1" fill="#EDE8DC"/>
+          <rect x="7.5"  y="7.5"  width="5.5" height="5.5" rx="1" fill="#D4921E"/>
+          <rect x="15"   y="7.5"  width="5.5" height="5.5" rx="1" fill="#D4921E"/>
+          <rect x="22.5" y="7.5"  width="5.5" height="5.5" rx="1" fill="#3A352A"/>
+          <rect x="0"    y="15"   width="5.5" height="5.5" rx="1" fill="#3A352A"/>
+          <rect x="7.5"  y="15"   width="5.5" height="5.5" rx="1" fill="#D4921E"/>
+          <rect x="15"   y="15"   width="5.5" height="5.5" rx="1" fill="#D4921E"/>
+          <rect x="22.5" y="15"   width="5.5" height="5.5" rx="1" fill="#EDE8DC"/>
+          <rect x="0"    y="22.5" width="5.5" height="5.5" rx="1" fill="#EDE8DC"/>
+          <rect x="7.5"  y="22.5" width="5.5" height="5.5" rx="1" fill="#3A352A"/>
+          <rect x="15"   y="22.5" width="5.5" height="5.5" rx="1" fill="#EDE8DC"/>
+          <rect x="22.5" y="22.5" width="5.5" height="5.5" rx="1" fill="#3A352A"/>
+        </svg>
+        <span class="footer-name">Open Square</span>
       </div>
       <p>© 2026 Open Square · Student-led chess outreach</p>
     </div>
   </footer>
 
   <script>
-    // Scroll reveal
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          observer.unobserve(e.target);
-        }
-      });
+    /* scroll reveal */
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
     }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+    document.querySelectorAll('.hero .reveal').forEach(el => setTimeout(() => el.classList.add('visible'), 50));
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-    // Immediately show hero elements (already in view)
-    document.querySelectorAll('.hero .reveal').forEach(el => {
-      setTimeout(() => el.classList.add('visible'), 50);
+    /* theme toggle — persists via localStorage */
+    const html = document.documentElement;
+    const btn  = document.getElementById('theme-btn');
+    const saved = localStorage.getItem('os-theme');
+    if (saved) html.setAttribute('data-theme', saved);
+    btn.addEventListener('click', () => {
+      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('os-theme', next);
     });
 
-    // Newsletter form
+    /* newsletter */
     function handleSubscribe(e) {
       e.preventDefault();
-      const btn = document.getElementById('subscribe-btn');
-      const input = document.getElementById('newsletter-email');
-      btn.textContent = 'Subscribed ✓';
-      btn.style.background = '#2D6A4F';
-      btn.disabled = true;
-      input.disabled = true;
+      const b = document.getElementById('sub-btn');
+      const i = document.getElementById('nl-email');
+      b.textContent = 'Subscribed ✓';
+      b.style.background = '#2D6A4F';
+      b.disabled = true; i.disabled = true;
     }
   </script>
 </body>
